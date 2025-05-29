@@ -9,10 +9,15 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.javarush.cryptoanalyzer.ostapenko.constans.ApplicationComplitionConstans.EXCEPTION;
 import static com.javarush.cryptoanalyzer.ostapenko.constans.ApplicationComplitionConstans.SUCCESS;
 
 public class GuiView implements View {
+    private Map<String, Runnable> handlers = new HashMap<>();
+
     private final Stage stage;
     private TextArea logArea;
     private Button selectFileButtonIn;
@@ -45,6 +50,7 @@ public class GuiView implements View {
         root.setTop(selectionPanelAll);
         root.setCenter(controlPanelAll);
         root.setBottom(logPane);
+
         return new Scene(root, 800, 800);
     }
 
@@ -107,6 +113,9 @@ public class GuiView implements View {
         return logScrollPane;
     }
 
+
+
+
     public CheckBox getEncryptCheckBox() {
         return encryptCheckBox;
     }
@@ -155,6 +164,14 @@ public class GuiView implements View {
             case OK -> System.out.println(SUCCESS);
             case ERROR -> System.out.println(EXCEPTION + result.getApplicationException().getMessage());
         }
+    }
+
+    public void setSelectFileButtonInHandler(Runnable handler) {
+        selectFileButtonIn.setOnAction(e -> handler.run());
+    }
+
+    public void log(String message) {
+        logArea.appendText(message + "\n");
     }
 
 }

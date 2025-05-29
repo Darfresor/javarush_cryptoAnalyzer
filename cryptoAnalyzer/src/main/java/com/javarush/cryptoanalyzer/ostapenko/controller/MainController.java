@@ -5,7 +5,12 @@ import com.javarush.cryptoanalyzer.ostapenko.exception.ApplicationException;
 import com.javarush.cryptoanalyzer.ostapenko.repository.FunctionCode;
 import com.javarush.cryptoanalyzer.ostapenko.repository.ResultCode;
 import com.javarush.cryptoanalyzer.ostapenko.service.Function;
+import com.javarush.cryptoanalyzer.ostapenko.view.GuiView;
 import com.javarush.cryptoanalyzer.ostapenko.view.View;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+
+import java.io.File;
 
 import static com.javarush.cryptoanalyzer.ostapenko.constans.FunctionCodeConstans.*;
 
@@ -14,6 +19,34 @@ public class MainController {
 
     public MainController(View view) {
         this.view = view;
+        setupEventHandlers();
+    }
+
+
+    private void setupEventHandlers() {
+        if(view instanceof GuiView guiView){
+            guiView.setSelectFileButtonInHandler(() -> handleSelectFileIn(guiView));
+        }
+
+    }
+
+
+    private void handleSelectFileIn(GuiView guiView) {
+        System.out.println("Нажата кнопка выбор пути входящего файла");
+            FileChooser fileChooser = new FileChooser();
+            File file = fileChooser.showOpenDialog(new Stage());
+            if (file != null) {
+                //boolean isValidExtension = Validator.isValidExtension(file.getAbsolutePath());
+                boolean isValidExtension = true;
+                if (!isValidExtension) {
+                    guiView.getFilePathFieldIn().setText("");
+                   // showAlertWindow("Неподдерживаемый файл", "Пожалуйста, выберите файл с расширением .txt");
+                } else {
+                    guiView.getFilePathFieldIn().setText(file.getAbsolutePath());
+                    guiView.log("Выбран файл с входными данными: " + file);
+                }
+
+            }
     }
 
     public void run() {
@@ -35,9 +68,5 @@ public class MainController {
             case "2" -> FunctionCode.valueOf(DECODE).getFunction();
             default -> FunctionCode.valueOf(UNSUPPORTED_FUNCTION).getFunction();
         };
-    }
-
-    public View getView() {
-        return view;
     }
 }

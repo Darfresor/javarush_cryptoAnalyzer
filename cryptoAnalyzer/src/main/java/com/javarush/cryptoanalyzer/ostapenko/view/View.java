@@ -12,4 +12,5 @@ public interface View {
     String[] getParametrs();
 
     void printResult(Result result);
+
 }

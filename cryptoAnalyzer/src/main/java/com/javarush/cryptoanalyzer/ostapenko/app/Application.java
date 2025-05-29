@@ -13,8 +13,8 @@ public class Application  extends javafx.application.Application {
     public void start(Stage stage) throws Exception {
 
         View view = new GuiView(stage);
-        //MainController controller = new MainController(view);
-        //controller.run();
+        MainController controller = new MainController(view);
+        controller.run();
 
 
     }
