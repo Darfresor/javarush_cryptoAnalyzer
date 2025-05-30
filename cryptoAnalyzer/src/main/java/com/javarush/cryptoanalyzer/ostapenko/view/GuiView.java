@@ -40,6 +40,7 @@ public class GuiView implements View {
         stage.setScene(createScene());
         stage.show();
     }
+
     public Scene createScene() {
         //TODO вынести в константы названия кнопок
         VBox selectionPanelAll = getPathFilePanel();
@@ -114,44 +115,6 @@ public class GuiView implements View {
     }
 
 
-
-
-    public CheckBox getEncryptCheckBox() {
-        return encryptCheckBox;
-    }
-
-    public CheckBox getDeryptCheckBox() {
-        return deryptCheckBox;
-    }
-
-    public Button getStartButton() {
-        return startButton;
-    }
-
-    public TextArea getlogArea() {
-        return logArea;
-    }
-
-    public Button getSelectFileButtonIn() {
-        return selectFileButtonIn;
-    }
-
-    public TextField getFilePathFieldIn() {
-        return filePathFieldIn;
-    }
-
-    public Button getSelectFileButtonOut() {
-        return selectFileButtonOut;
-    }
-
-    public TextField getFilePathFieldOut() {
-        return filePathFieldOut;
-    }
-
-    public Spinner<Integer> getSpinner() {
-        return key;
-    }
-
     @Override
     public String[] getParametrs() {
         //TODO здесь нужно доделать возвращение параметров
@@ -174,4 +137,32 @@ public class GuiView implements View {
         logArea.appendText(message + "\n");
     }
 
+    public void setSelectFileButtonOutHandler(Runnable handler) {
+        selectFileButtonOut.setOnAction(e -> handler.run());
+    }
+
+    public void setFilePathFieldIn(String text) {
+        filePathFieldIn.setText(text);
+    }
+
+    public void setFilePathFieldOut(String text) {
+        filePathFieldOut.setText(text);
+    }
+
+    public boolean isStartButtonAvailability() {
+        if (filePathFieldOut.getText() != null
+                && filePathFieldIn.getText() != null
+                && !filePathFieldIn.getText().isEmpty()
+                && !filePathFieldOut.getText().isEmpty()
+        ) {
+            return true;
+
+        } else {
+            return false;
+        }
+    }
+
+    public void setEnabledStartButton(boolean b) {
+        startButton.setDisable(!b);
+    }
 }
