@@ -59,7 +59,7 @@ public class Encode implements Function{
             System.out.println(result);
         } catch(Exception e){
             e.printStackTrace();
-            return new Result(ERROR, new ApplicationException("ошибка при операции декодирования", e));
+            return new Result(ERROR, new ApplicationException("ошибка при операции кодирования", e));
 
         }
         return new Result(OK);

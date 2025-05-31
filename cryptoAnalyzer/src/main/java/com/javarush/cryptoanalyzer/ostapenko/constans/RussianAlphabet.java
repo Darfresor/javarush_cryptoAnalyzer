@@ -47,7 +47,6 @@ public enum RussianAlphabet {
     EXCLAMATION('!', 40),
     QUESTION('?', 41),
     SPACE(' ', 42);
-
     private final char cyrillicChar;
     private final int position;
 
@@ -56,11 +55,11 @@ public enum RussianAlphabet {
         this.position = position;
     }
 
-    public char getCyrillicChar() {
+    public Character getCyrillicChar() {
         return cyrillicChar;
     }
 
-    public int getPosition() {
+    public Integer getPosition() {
         return position;
     }
 
@@ -73,9 +72,6 @@ public enum RussianAlphabet {
         }
         return cyrillicArray;
     }
-
-    ;
-
     public static HashSet<Character> getAlphabetSet() {
         HashSet<Character> alphabetSet = new HashSet<>();
         for (var letter : RussianAlphabet.values()) {
@@ -83,11 +79,10 @@ public enum RussianAlphabet {
         }
         return alphabetSet;
     }
-
     public static HashMap<Character, Integer> getAlphabetMap() {
-        HashMap<Character, Integer> alphabetMap = new HashMap<>();
+        HashMap<Character,Integer> alphabetMap = new HashMap<>();
         for (var letter : RussianAlphabet.values()) {
-            alphabetMap.put(letter.getCyrillicChar(), letter.getPosition());
+            alphabetMap.put(letter.getCyrillicChar(),letter.getPosition());
         }
         return alphabetMap;
     }
