@@ -6,7 +6,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.util.Arrays;
 
+//TODO вынести текст в константы
 public class GUIController extends Controller {
 
     public GUIController(View view) {
@@ -20,15 +22,18 @@ public class GUIController extends Controller {
 
     private void setupEventHandlers() {
         if (view instanceof GuiView guiView) {
-            guiView.setSelectFileButtonInHandler(() -> handleSelectFileIn(guiView));
-            guiView.setSelectFileButtonOutHandler(() -> handleSelectFileOut(guiView));
+            guiView.setSelectFileButtonInHandler(() -> handlerSelectFileIn(guiView));
+            guiView.setSelectFileButtonOutHandler(() -> handlerSelectFileOut(guiView));
+            guiView.setEncryptCheckBox(() -> handlerEncryptCheckBox(guiView));
+            guiView.setDecryptCheckBox(() -> handlerDecryptCheckBox(guiView));
+            guiView.setStartButton(() -> handlerStartButton(guiView));
             // При нажатии на "Закодировать" -> run() с режимом "encode"
             //  guiView.setEncodeHandler(() -> runWithMode("encode"));
             //TODO при нажатии кнопки описываем ее действие, если это кнопка кодировать и прочее то для них вызываем метод run последующий метод run.
         }
     }
 
-    private void handleSelectFileIn(GuiView guiView) {
+    private void handlerSelectFileIn(GuiView guiView) {
         System.out.println("Начат выбор файла входных данных");
         FileChooser fileChooser = new FileChooser();
         File file = fileChooser.showOpenDialog(new Stage());
@@ -41,7 +46,7 @@ public class GUIController extends Controller {
             guiView.setEnabledStartButton(false);
         }
     }
-    private void handleSelectFileOut(GuiView guiView) {
+    private void handlerSelectFileOut(GuiView guiView) {
         System.out.println("Начат выбор файла выходных данных");
         FileChooser fileChooser = new FileChooser();
         File file = fileChooser.showOpenDialog(new Stage());
@@ -54,4 +59,23 @@ public class GUIController extends Controller {
             guiView.setEnabledStartButton(false);
         }
     }
+
+    private void handlerEncryptCheckBox(GuiView guiView) {
+        if (guiView.isSelectedEncryptCheckBox()) {
+            guiView.setSelectedDecryptCheckBox(false);
+        }
+    }
+
+    private void handlerDecryptCheckBox(GuiView guiView) {
+        if (guiView.isSelectedDecryptCheckBox()) {
+            guiView.setSelectedEncryptCheckBox(false);
+        }
+    }
+    private void handlerStartButton(GuiView guiView) {
+        String[] str = guiView.getParametrs();
+        System.out.println(Arrays.toString(str));
+    }
+
+
+
 }

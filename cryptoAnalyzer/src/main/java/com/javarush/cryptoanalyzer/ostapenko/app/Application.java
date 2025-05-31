@@ -15,7 +15,5 @@ public class Application  extends javafx.application.Application {
         View view = new GuiView(stage);
         Controller controller = new GUIController(view);
         controller.initialize();
-
-
     }
 }

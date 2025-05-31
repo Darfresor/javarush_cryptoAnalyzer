@@ -15,6 +15,7 @@ import java.util.Map;
 import static com.javarush.cryptoanalyzer.ostapenko.constans.ApplicationComplitionConstans.EXCEPTION;
 import static com.javarush.cryptoanalyzer.ostapenko.constans.ApplicationComplitionConstans.SUCCESS;
 
+//TODO вынести текст в константы
 public class GuiView implements View {
     private Map<String, Runnable> handlers = new HashMap<>();
 
@@ -25,7 +26,7 @@ public class GuiView implements View {
     private TextField filePathFieldIn;
     private TextField filePathFieldOut;
     private CheckBox encryptCheckBox;
-    private CheckBox deryptCheckBox;
+    private CheckBox decryptCheckBox;
     private Spinner<Integer> key;
     private Button startButton;
 
@@ -68,10 +69,10 @@ public class GuiView implements View {
         encryptCheckBox = new CheckBox("Шифровать");
         encryptCheckBox.setSelected(true);
         HBox.setMargin(encryptCheckBox, new Insets(0, 0, 0, 20));
-        deryptCheckBox = new CheckBox("Расшифровать");
-        deryptCheckBox.setSelected(false);
-        HBox.setMargin(deryptCheckBox, new Insets(0, 0, 0, 20));
-        HBox controlPanelCheck = new HBox(10, encryptCheckBox, deryptCheckBox);
+        decryptCheckBox = new CheckBox("Расшифровать");
+        decryptCheckBox.setSelected(false);
+        HBox.setMargin(decryptCheckBox, new Insets(0, 0, 0, 20));
+        HBox controlPanelCheck = new HBox(10, encryptCheckBox, decryptCheckBox);
 
         startButton = new Button("Запустить обработку");
         startButton.setDisable(true);
@@ -117,8 +118,17 @@ public class GuiView implements View {
 
     @Override
     public String[] getParametrs() {
-        //TODO здесь нужно доделать возвращение параметров
-        return new String[0];
+        String[] parametrs = new String[4];
+        if(isSelectedEncryptCheckBox()){
+            parametrs[0] ="ENCODE";
+        };
+        if(isSelectedDecryptCheckBox()){
+            parametrs[0] ="DECODE";
+        }
+        parametrs[1] =  filePathFieldIn.getText();
+        parametrs[2] =  filePathFieldOut.getText();
+        parametrs[3] = String.valueOf(key.getValue());
+        return parametrs;
     }
 
     @Override
@@ -156,7 +166,6 @@ public class GuiView implements View {
                 && !filePathFieldOut.getText().isEmpty()
         ) {
             return true;
-
         } else {
             return false;
         }
@@ -164,5 +173,33 @@ public class GuiView implements View {
 
     public void setEnabledStartButton(boolean b) {
         startButton.setDisable(!b);
+    }
+
+    public void setEncryptCheckBox(Runnable handler) {
+        encryptCheckBox.setOnAction(e -> handler.run());
+    }
+
+    public boolean isSelectedEncryptCheckBox() {
+        return encryptCheckBox.isSelected();
+    }
+
+    public void setSelectedDecryptCheckBox(boolean b) {
+        decryptCheckBox.setSelected(b);
+    }
+
+    public void setDecryptCheckBox(Runnable handler) {
+        decryptCheckBox.setOnAction(e -> handler.run());
+    }
+
+    public boolean isSelectedDecryptCheckBox() {
+        return decryptCheckBox.isSelected();
+    }
+
+    public void setSelectedEncryptCheckBox(boolean b) {
+        encryptCheckBox.setSelected(b);
+    }
+
+    public void setStartButton(Runnable handler) {
+        startButton.setOnAction(e -> handler.run());
     }
 }

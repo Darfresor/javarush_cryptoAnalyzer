@@ -41,8 +41,8 @@ public abstract class Controller {
 
     private Function getFunction(String mode) {
         return switch (mode) {
-            case "1" -> FunctionCode.valueOf(ENCODE).getFunction();
-            case "2" -> FunctionCode.valueOf(DECODE).getFunction();
+            case "ENCODE" -> FunctionCode.valueOf(ENCODE).getFunction();
+            case "DECODE" -> FunctionCode.valueOf(DECODE).getFunction();
             default -> FunctionCode.valueOf(UNSUPPORTED_FUNCTION).getFunction();
         };
     }
