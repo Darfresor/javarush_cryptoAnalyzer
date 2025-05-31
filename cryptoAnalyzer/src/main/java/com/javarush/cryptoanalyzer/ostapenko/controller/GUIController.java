@@ -26,10 +26,7 @@ public class GUIController extends Controller {
             guiView.setSelectFileButtonOutHandler(() -> handlerSelectFileOut(guiView));
             guiView.setEncryptCheckBox(() -> handlerEncryptCheckBox(guiView));
             guiView.setDecryptCheckBox(() -> handlerDecryptCheckBox(guiView));
-            guiView.setStartButton(() -> handlerStartButton(guiView));
-            // При нажатии на "Закодировать" -> run() с режимом "encode"
-            //  guiView.setEncodeHandler(() -> runWithMode("encode"));
-            //TODO при нажатии кнопки описываем ее действие, если это кнопка кодировать и прочее то для них вызываем метод run последующий метод run.
+            guiView.setStartButton(() -> handlerStartButton());
         }
     }
 
@@ -71,9 +68,8 @@ public class GUIController extends Controller {
             guiView.setSelectedEncryptCheckBox(false);
         }
     }
-    private void handlerStartButton(GuiView guiView) {
-        String[] str = guiView.getParametrs();
-        System.out.println(Arrays.toString(str));
+    private void handlerStartButton() {
+        run();
     }
 
 
