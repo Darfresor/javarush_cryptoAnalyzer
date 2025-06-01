@@ -2,6 +2,7 @@ package com.javarush.cryptoanalyzer.ostapenko.test;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.javarush.cryptoanalyzer.ostapenko.utils.BrutForceDictionary;
 
 import java.io.InputStream;
 import java.util.HashSet;
@@ -9,24 +10,8 @@ import java.util.List;
 
 public class TestBrutForce {
     public static void main(String[] args) {
-        HashSet<String> DICTIONARY = null;
-        try {
-            // 1. Создаём ObjectMapper (основной класс Jackson)
-            ObjectMapper mapper = new ObjectMapper();
-
-            // 2. Загружаем JSON-файл в Java-объект
-            InputStream inputStream = TestBrutForce.class.getClassLoader()
-                    .getResourceAsStream("com/javarush/cryptoanalyzer/ostapenko/cryptoanalyzer/russian_top_words.json");
-
-            List<String> words = mapper.readValue(inputStream, new TypeReference<List<String>>() {});
-            DICTIONARY = new HashSet<>(words);
-            System.out.println(DICTIONARY);
-
-
-        } catch (Exception e) {
-            System.err.println("Ошибка при загрузке словаря:");
-            e.printStackTrace();
-        };
+        HashSet<String> DICTIONARY =BrutForceDictionary.getDictionary();
+        System.out.println(DICTIONARY);
         /*
         //-------------------------------------------
         Cipher cipher = new Cipher();
