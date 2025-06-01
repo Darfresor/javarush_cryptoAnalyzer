@@ -27,9 +27,8 @@ public class BrutForceDictionary {
     }
 
     private static HashSet<String> loadDictionary() {
-        try{
+        try(InputStream inputStream = BrutForceDictionary.class.getClassLoader().getResourceAsStream(DICTIONARY_PATH)){
             ObjectMapper mapper = new ObjectMapper();
-            InputStream inputStream = BrutForceDictionary.class.getClassLoader().getResourceAsStream(DICTIONARY_PATH);
             List<String> words = mapper.readValue(inputStream, new TypeReference<List<String>>() {
             });
             dictionary = new HashSet<>(words);
