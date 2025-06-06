@@ -15,10 +15,27 @@
     </properties>
 
     <dependencies>
+        <!-- Core JacaFx -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>17.0.6</version>
+            <classifier>win</classifier>
+        </dependency>
+        <!-- Явно добавляем sources и javadoc -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>17.0.6</version>
+            <classifier>sources</classifier>
+            <scope>provided</scope> <!-- чтобы не включать в итоговый JAR -->
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>17.0.6</version>
+            <classifier>javadoc</classifier>
+            <scope>provided</scope>
         </dependency>
         <!-- Core Jackson -->
         <dependency>
@@ -26,32 +43,17 @@
             <artifactId>jackson-core</artifactId>
             <version>2.15.3</version> <!-- Актуальная версия -->
         </dependency>
-
         <!-- Для работы с ObjectMapper (сериализация/десериализация) -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.15.3</version>
         </dependency>
-
         <!-- Аннотации для кастомных правил сериализации -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
             <version>2.15.3</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -73,6 +75,19 @@
                     <source>23</source>
                     <target>23</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <id>download-sources</id>
+                        <goals>
+                            <goal>sources</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.openjfx</groupId>

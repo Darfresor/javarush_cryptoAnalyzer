@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -16,6 +17,8 @@ import static com.javarush.cryptoanalyzer.ostapenko.constans.ApplicationCompliti
 import static com.javarush.cryptoanalyzer.ostapenko.constans.ApplicationComplitionConstans.SUCCESS;
 
 //TODO вынести текст в константы
+//TODO разделить на методы init component, actionlistener component, и в конце уже вызов сцены с ее параметрами.
+//Сделать отдельный класс унаследованный от stage и туда перенести логику?
 public class GuiView implements View {
     private Map<String, Runnable> handlers = new HashMap<>();
 
@@ -23,10 +26,18 @@ public class GuiView implements View {
     private TextArea logArea;
     private Button selectFileButtonIn;
     private Button selectFileButtonOut;
+    private Button selectFileButtonSource;
+    private Button showLogButton;
+    private Button changeChar;
     private TextField filePathFieldIn;
     private TextField filePathFieldOut;
-    private CheckBox encryptCheckBox;
-    private CheckBox decryptCheckBox;
+    private TextField filePathFieldSource;
+    private RadioButton encryptCheckBox;
+    private RadioButton decryptCheckBox;
+    private RadioButton bruteforceCheckBox;
+    private RadioButton staticAnalyzeCheckBox;
+    private RadioButton vigenereDecryptCheckBox;
+    private RadioButton vigenereEncryptCheckBox;
     private Spinner<Integer> key;
     private Button startButton;
 
@@ -44,16 +55,17 @@ public class GuiView implements View {
 
     public Scene createScene() {
         //TODO вынести в константы названия кнопок
-        VBox selectionPanelAll = getPathFilePanel();
+        HBox selectionPanelAll = getPathFilePanel();
         VBox controlPanelAll = getControlPanelAll();
-        ScrollPane logPane = getLogPane();
+        VBox logPaneAll = getLogPane();
 
         BorderPane root = new BorderPane();
         root.setTop(selectionPanelAll);
+        BorderPane.setMargin(selectionPanelAll, new Insets(0, 20, 0, 0));
         root.setCenter(controlPanelAll);
-        root.setBottom(logPane);
+        root.setBottom(logPaneAll);
 
-        return new Scene(root, 800, 800);
+        return new Scene(root, 1800, 1000);
     }
 
     private VBox getControlPanelAll() {
@@ -66,13 +78,37 @@ public class GuiView implements View {
         key = new Spinner<>(minKeyLenght, maxKeyLength, 1);
         HBox keyInfo = new HBox(10, keyTip, key);
 
-        encryptCheckBox = new CheckBox("Шифровать");
+        encryptCheckBox = new RadioButton("Шифровать с ключом(Шифр Цезаря)");
         encryptCheckBox.setSelected(true);
-        HBox.setMargin(encryptCheckBox, new Insets(0, 0, 0, 20));
-        decryptCheckBox = new CheckBox("Расшифровать");
+        decryptCheckBox = new RadioButton("Расшифровать с ключом(Шифр Цезаря)");
         decryptCheckBox.setSelected(false);
-        HBox.setMargin(decryptCheckBox, new Insets(0, 0, 0, 20));
-        HBox controlPanelCheck = new HBox(10, encryptCheckBox, decryptCheckBox);
+        bruteforceCheckBox = new RadioButton("Расшифровать без ключа(BrutForce для шифра Цезаря)");
+        bruteforceCheckBox.setSelected(false);
+        staticAnalyzeCheckBox = new RadioButton("Расшифровать статистическим анализом");
+        staticAnalyzeCheckBox.setSelected(false);
+        vigenereEncryptCheckBox = new RadioButton("Шифровать словом-ключом(шифр Виженера)");
+        vigenereEncryptCheckBox.setSelected(false);
+        vigenereEncryptCheckBox.setDisable(true);
+        vigenereDecryptCheckBox = new RadioButton("Расшифровать словом-ключом(шифр Виженера)");
+        vigenereDecryptCheckBox.setSelected(false);
+        vigenereDecryptCheckBox.setDisable(true);
+
+
+        ToggleGroup checkBoxGroup = new ToggleGroup();
+        encryptCheckBox.setToggleGroup(checkBoxGroup);
+        decryptCheckBox.setToggleGroup(checkBoxGroup);
+        bruteforceCheckBox.setToggleGroup(checkBoxGroup);
+        staticAnalyzeCheckBox.setToggleGroup(checkBoxGroup);
+        vigenereEncryptCheckBox.setToggleGroup(checkBoxGroup);
+        vigenereDecryptCheckBox.setToggleGroup(checkBoxGroup);
+
+        VBox controlPanelCheck = new VBox(10, encryptCheckBox, decryptCheckBox, bruteforceCheckBox, staticAnalyzeCheckBox, vigenereEncryptCheckBox, vigenereDecryptCheckBox);
+        VBox.setMargin(encryptCheckBox, new Insets(0, 0, 0, 20));
+        VBox.setMargin(decryptCheckBox, new Insets(0, 0, 0, 20));
+        VBox.setMargin(bruteforceCheckBox, new Insets(0, 0, 0, 20));
+        VBox.setMargin(staticAnalyzeCheckBox, new Insets(0, 0, 0, 20));
+        VBox.setMargin(vigenereEncryptCheckBox, new Insets(0, 0, 0, 20));
+        VBox.setMargin(vigenereDecryptCheckBox, new Insets(0, 0, 0, 20));
 
         startButton = new Button("Запустить обработку");
         startButton.setDisable(true);
@@ -84,27 +120,73 @@ public class GuiView implements View {
         return controlPanelAll;
     }
 
-    private VBox getPathFilePanel() {
+    private HBox getPathFilePanel() {
+        TextArea textFileIn = new TextArea("Здесь будут данные входного файла");
+        textFileIn.setEditable(false);
+        textFileIn.setWrapText(true);
+        ScrollPane logScrollPanelIn = new ScrollPane(textFileIn);
+        logScrollPanelIn.setFitToWidth(true);
+        logScrollPanelIn.setFitToHeight(true);
         Label labelForInput = new Label("Путь к файлу с входными данными:");
-        HBox.setMargin(labelForInput, new Insets(0, 0, 0, 20));
         filePathFieldIn = new TextField();
         filePathFieldIn.setEditable(false);
+        HBox.setHgrow(filePathFieldIn, Priority.ALWAYS);
         selectFileButtonIn = new Button("Выбрать файл");
 
+        TextArea textFileSource = new TextArea("Здесь будут данные файла для статистического анализа");
+        textFileSource.setEditable(false);
+        textFileSource.setWrapText(true);
+        ScrollPane logScrollPanelSource = new ScrollPane(textFileSource);
+        logScrollPanelSource.setFitToWidth(true);
+        logScrollPanelSource.setFitToHeight(true);
+        Label labelForSource = new Label("Путь к файлу для статистического анализа:");
+        filePathFieldSource = new TextField();
+        filePathFieldSource.setEditable(false);
+        HBox.setHgrow(filePathFieldSource, Priority.ALWAYS);
+        selectFileButtonSource = new Button("Выбрать файл");
+
+        Label labelForSourceChar = new Label("Исходная буква:");
+        ComboBox comboBoxSourceChar = new ComboBox();
+        Label labelForChangeChar = new Label("Заменяемая буква:");
+        ComboBox comboBoxChangeChar = new ComboBox();
+        Button changeChar = new Button("Заменить символы");
+
+
+        TextArea textFileOut = new TextArea("Здесь будут данные выходного файла");
+        textFileOut.setEditable(false);
+        textFileOut.setWrapText(true);
+        ScrollPane logScrollPanelOut = new ScrollPane(textFileOut);
+        logScrollPanelOut.setFitToWidth(true);
+        logScrollPanelOut.setFitToHeight(true);
         Label labelForOutput = new Label("Путь к файлу с выходными данными:");
-        HBox.setMargin(labelForOutput, new Insets(0, 0, 0, 20));
         filePathFieldOut = new TextField();
         filePathFieldOut.setEditable(false);
+        HBox.setHgrow(filePathFieldOut, Priority.ALWAYS);
         selectFileButtonOut = new Button("Выбрать файл");
 
 
         HBox selectionPanelIn = new HBox(10, labelForInput, filePathFieldIn, selectFileButtonIn);
         HBox selectionPanelOut = new HBox(10, labelForOutput, filePathFieldOut, selectFileButtonOut);
-        VBox selectionPanelAll = new VBox(10, selectionPanelIn, selectionPanelOut);
+        HBox selectionPanelSource = new HBox(10, labelForSource, filePathFieldSource, selectFileButtonSource, comboBoxSourceChar);
+        HBox selectionPanelChangeChar = new HBox(10, labelForSourceChar, comboBoxSourceChar, labelForChangeChar, comboBoxChangeChar);
+        VBox selectionChangeFinal = new VBox(10, selectionPanelChangeChar, changeChar);
+        HBox textSourceAreaAndSelectionChangePanel = new HBox(10, logScrollPanelSource, selectionChangeFinal);
+
+
+        VBox panelWorkWithInAndSourceFile = new VBox(10, logScrollPanelIn, selectionPanelIn, textSourceAreaAndSelectionChangePanel, selectionPanelSource);
+        HBox.setMargin(panelWorkWithInAndSourceFile, new Insets(0, 0, 0, 20));
+        VBox panelWorkWithOutFile = new VBox(10, logScrollPanelOut, selectionPanelOut);
+
+        HBox selectionPanelAll = new HBox(10, panelWorkWithInAndSourceFile, panelWorkWithOutFile);
+        HBox.setHgrow(panelWorkWithInAndSourceFile, Priority.ALWAYS);
+        HBox.setHgrow(panelWorkWithOutFile, Priority.ALWAYS);
         return selectionPanelAll;
     }
 
-    private ScrollPane getLogPane() {
+    private VBox getLogPane() {
+        showLogButton = new Button("Скрыть лог");
+
+
         logArea = new TextArea();
         logArea.setEditable(false);
         logArea.setWrapText(true);
@@ -112,21 +194,27 @@ public class GuiView implements View {
         ScrollPane logScrollPane = new ScrollPane(logArea);
         logScrollPane.setFitToWidth(true);
         logScrollPane.setFitToHeight(true);
-        return logScrollPane;
+
+        VBox logPanelAll = new VBox(10, showLogButton, logScrollPane);
+        VBox.setMargin(showLogButton, new Insets(0, 0, 0, 20));
+        VBox.setMargin(logScrollPane, new Insets(0, 20, 5, 20));
+
+        return logPanelAll;
     }
 
 
     @Override
     public String[] getParametrs() {
         String[] parametrs = new String[4];
-        if(isSelectedEncryptCheckBox()){
-            parametrs[0] ="ENCODE";
-        };
-        if(isSelectedDecryptCheckBox()){
-            parametrs[0] ="DECODE";
+        if (isSelectedEncryptCheckBox()) {
+            parametrs[0] = "ENCODE";
         }
-        parametrs[1] =  filePathFieldIn.getText();
-        parametrs[2] =  filePathFieldOut.getText();
+        ;
+        if (isSelectedDecryptCheckBox()) {
+            parametrs[0] = "DECODE";
+        }
+        parametrs[1] = filePathFieldIn.getText();
+        parametrs[2] = filePathFieldOut.getText();
         parametrs[3] = String.valueOf(key.getValue());
         return parametrs;
     }
@@ -160,11 +248,7 @@ public class GuiView implements View {
     }
 
     public boolean isStartButtonAvailability() {
-        if (filePathFieldOut.getText() != null
-                && filePathFieldIn.getText() != null
-                && !filePathFieldIn.getText().isEmpty()
-                && !filePathFieldOut.getText().isEmpty()
-        ) {
+        if (filePathFieldOut.getText() != null && filePathFieldIn.getText() != null && !filePathFieldIn.getText().isEmpty() && !filePathFieldOut.getText().isEmpty()) {
             return true;
         } else {
             return false;
@@ -175,28 +259,14 @@ public class GuiView implements View {
         startButton.setDisable(!b);
     }
 
-    public void setEncryptCheckBox(Runnable handler) {
-        encryptCheckBox.setOnAction(e -> handler.run());
-    }
 
     public boolean isSelectedEncryptCheckBox() {
         return encryptCheckBox.isSelected();
     }
 
-    public void setSelectedDecryptCheckBox(boolean b) {
-        decryptCheckBox.setSelected(b);
-    }
-
-    public void setDecryptCheckBox(Runnable handler) {
-        decryptCheckBox.setOnAction(e -> handler.run());
-    }
 
     public boolean isSelectedDecryptCheckBox() {
         return decryptCheckBox.isSelected();
-    }
-
-    public void setSelectedEncryptCheckBox(boolean b) {
-        encryptCheckBox.setSelected(b);
     }
 
     public void setStartButton(Runnable handler) {

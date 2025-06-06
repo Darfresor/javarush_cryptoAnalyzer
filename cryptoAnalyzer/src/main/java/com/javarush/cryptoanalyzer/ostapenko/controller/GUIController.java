@@ -6,8 +6,12 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-
+//TODO  в консоли тоже добавить отображение по умолчанию?
+//TODO ДОбавить ли всплывающий сообщения и свертку лога?
+//TODO добавить значек смены путей между собой
+//TODO сделать валидаци, не допуская одинаковые пути
 //TODO вынести текст в константы
+//TODO выводить в дебаг информацию о ключе + менять счетчик в интерфейсе?
 public class GUIController extends Controller {
 
     public GUIController(View view) {
@@ -23,8 +27,6 @@ public class GUIController extends Controller {
         if (view instanceof GuiView guiView) {
             guiView.setSelectFileButtonInHandler(() -> handlerSelectFileIn(guiView));
             guiView.setSelectFileButtonOutHandler(() -> handlerSelectFileOut(guiView));
-            guiView.setEncryptCheckBox(() -> handlerEncryptCheckBox(guiView));
-            guiView.setDecryptCheckBox(() -> handlerDecryptCheckBox(guiView));
             guiView.setStartButton(() -> handlerStartButton());
         }
     }
@@ -56,17 +58,6 @@ public class GUIController extends Controller {
         }
     }
 
-    private void handlerEncryptCheckBox(GuiView guiView) {
-        if (guiView.isSelectedEncryptCheckBox()) {
-            guiView.setSelectedDecryptCheckBox(false);
-        }
-    }
-
-    private void handlerDecryptCheckBox(GuiView guiView) {
-        if (guiView.isSelectedDecryptCheckBox()) {
-            guiView.setSelectedEncryptCheckBox(false);
-        }
-    }
     private void handlerStartButton() {
         run();
     }

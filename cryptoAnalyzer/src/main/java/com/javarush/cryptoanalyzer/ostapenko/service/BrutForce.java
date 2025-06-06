@@ -80,7 +80,6 @@ public class BrutForce implements Function{
         } catch(Exception e){
             e.printStackTrace();
             return new Result(ERROR, new ApplicationException("ошибка при операции декодирования", e));
-
         }
         return new Result(OK);
     }
