@@ -42,6 +42,7 @@ public class GuiView implements View {
     private Button startButton;
     private TextArea textFileIn;
     private TextArea textFileOut;
+    private TextArea textFileSource;
 
 
     public GuiView(Stage stage) {
@@ -135,23 +136,32 @@ public class GuiView implements View {
         HBox.setHgrow(filePathFieldIn, Priority.ALWAYS);
         selectFileButtonIn = new Button("Выбрать файл");
 
-        TextArea textFileSource = new TextArea("Здесь будут данные файла для статистического анализа");
+        textFileSource = new TextArea("Здесь будут данные файла для статистического анализа");
         textFileSource.setEditable(false);
         textFileSource.setWrapText(true);
+        textFileSource.setDisable(true);
         ScrollPane logScrollPanelSource = new ScrollPane(textFileSource);
         logScrollPanelSource.setFitToWidth(true);
         logScrollPanelSource.setFitToHeight(true);
         Label labelForSource = new Label("Путь к файлу для статистического анализа:");
+        labelForSource.setDisable(true);
         filePathFieldSource = new TextField();
         filePathFieldSource.setEditable(false);
+        filePathFieldSource.setDisable(true);
         HBox.setHgrow(filePathFieldSource, Priority.ALWAYS);
         selectFileButtonSource = new Button("Выбрать файл");
+        selectFileButtonSource.setDisable(true);
 
         Label labelForSourceChar = new Label("Исходная буква:");
+        labelForSourceChar.setDisable(true);
         ComboBox comboBoxSourceChar = new ComboBox();
+        comboBoxSourceChar.setDisable(true);
         Label labelForChangeChar = new Label("Заменяемая буква:");
+        labelForChangeChar.setDisable(true);
         ComboBox comboBoxChangeChar = new ComboBox();
+        comboBoxChangeChar.setDisable(true);
         Button changeChar = new Button("Заменить символы");
+        changeChar.setDisable(true);
 
 
         textFileOut = new TextArea("Здесь будут данные выходного файла");
@@ -251,11 +261,17 @@ public class GuiView implements View {
     public void setFilePathFieldOut(String text) {
         filePathFieldOut.setText(text);
     }
+    public void setFilePathFieldSource(String text) {
+        filePathFieldSource.setText(text);
+    }
     public String getFilePathFieldIn() {
         return filePathFieldIn.getText();
     }
     public String getFilePathFieldOut() {
         return filePathFieldOut.getText();
+    }
+    public String getFilePathFieldSource() {
+        return filePathFieldSource.getText();
     }
 
     public boolean isStartButtonAvailability() {
@@ -297,5 +313,15 @@ public class GuiView implements View {
     public void setTextFileOut(String textOut) {
         this.textFileOut.setText(textOut);
     }
+    public void setTextFileSource(String textSource) {
+        this.textFileSource.setText(textSource);
+    }
+
+    public void setSelectFileButtonSourceHandler(Runnable handler) {
+        selectFileButtonSource.setOnAction(e -> handler.run());
+    }
+
+
+
 
 }

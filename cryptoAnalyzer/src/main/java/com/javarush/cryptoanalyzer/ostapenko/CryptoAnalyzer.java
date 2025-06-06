@@ -7,3 +7,4 @@ public class CryptoAnalyzer {
         Application.launch(Application.class, args);
     }
 }
+//TODO важно!! в брутфорсе сделать вывод ключа. Возможно в отдельном окне рядом с чебкосом брутфорса?

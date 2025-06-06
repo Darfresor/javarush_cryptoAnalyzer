@@ -28,6 +28,7 @@ public class GUIController extends Controller {
         if (view instanceof GuiView guiView) {
             guiView.setSelectFileButtonInHandler(() -> handlerSelectFileIn(guiView));
             guiView.setSelectFileButtonOutHandler(() -> handlerSelectFileOut(guiView));
+            guiView.setSelectFileButtonSourceHandler(() -> handlerSelectFileSource(guiView));
             guiView.setStartButton(() -> handlerStartButton(guiView));
         }
     }
@@ -61,6 +62,17 @@ public class GUIController extends Controller {
         };
         guiView.setTextFileOut(FileManager.readFile(guiView.getFilePathFieldOut()));
         guiView.log("Данные из выходного файла отображены в интерфейсе " + file);
+    }
+
+    private void handlerSelectFileSource(GuiView guiView) {
+        System.out.println("Начат выбор файла для статистического анализа");
+        FileChooser fileChooser = new FileChooser();
+        File file = fileChooser.showOpenDialog(new Stage());
+        guiView.setFilePathFieldSource(file.getAbsolutePath());
+        guiView.log("Выбран файл с со статистическими данными: " + file);
+        System.out.println("Выбор файла статистических данных завершен");
+        guiView.setTextFileSource(FileManager.readFile(guiView.getFilePathFieldSource()));
+        guiView.log("Данные из статистического файла отображены в интерфейсе " + file);
     }
 
     private void handlerStartButton(GuiView guiView) {
