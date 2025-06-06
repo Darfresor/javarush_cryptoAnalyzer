@@ -34,6 +34,7 @@ public abstract class Controller {
         } catch (RuntimeException e) {
             view.printResult(new Result(ResultCode.ERROR,
                     new ApplicationException("Ошибка в работе приложения", e)));
+            e.printStackTrace();
         }
     }
 
@@ -43,6 +44,7 @@ public abstract class Controller {
         return switch (mode) {
             case "ENCODE" -> FunctionCode.valueOf(ENCODE).getFunction();
             case "DECODE" -> FunctionCode.valueOf(DECODE).getFunction();
+            case "BRUTEFORCE" -> FunctionCode.valueOf(BRUTEFORCE).getFunction();
             default -> FunctionCode.valueOf(UNSUPPORTED_FUNCTION).getFunction();
         };
     }

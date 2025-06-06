@@ -40,6 +40,8 @@ public class GuiView implements View {
     private RadioButton vigenereEncryptCheckBox;
     private Spinner<Integer> key;
     private Button startButton;
+    private TextArea textFileIn;
+    private TextArea textFileOut;
 
 
     public GuiView(Stage stage) {
@@ -121,7 +123,7 @@ public class GuiView implements View {
     }
 
     private HBox getPathFilePanel() {
-        TextArea textFileIn = new TextArea("Здесь будут данные входного файла");
+        textFileIn = new TextArea("Здесь будут данные входного файла");
         textFileIn.setEditable(false);
         textFileIn.setWrapText(true);
         ScrollPane logScrollPanelIn = new ScrollPane(textFileIn);
@@ -152,7 +154,7 @@ public class GuiView implements View {
         Button changeChar = new Button("Заменить символы");
 
 
-        TextArea textFileOut = new TextArea("Здесь будут данные выходного файла");
+        textFileOut = new TextArea("Здесь будут данные выходного файла");
         textFileOut.setEditable(false);
         textFileOut.setWrapText(true);
         ScrollPane logScrollPanelOut = new ScrollPane(textFileOut);
@@ -208,11 +210,14 @@ public class GuiView implements View {
         String[] parametrs = new String[4];
         if (isSelectedEncryptCheckBox()) {
             parametrs[0] = "ENCODE";
-        }
+        };
         ;
         if (isSelectedDecryptCheckBox()) {
             parametrs[0] = "DECODE";
-        }
+        };
+        if (isSelectedBruteforceCheckBox()) {
+            parametrs[0] = "BRUTEFORCE";
+        };
         parametrs[1] = filePathFieldIn.getText();
         parametrs[2] = filePathFieldOut.getText();
         parametrs[3] = String.valueOf(key.getValue());
@@ -246,9 +251,18 @@ public class GuiView implements View {
     public void setFilePathFieldOut(String text) {
         filePathFieldOut.setText(text);
     }
+    public String getFilePathFieldIn() {
+        return filePathFieldIn.getText();
+    }
+    public String getFilePathFieldOut() {
+        return filePathFieldOut.getText();
+    }
 
     public boolean isStartButtonAvailability() {
-        if (filePathFieldOut.getText() != null && filePathFieldIn.getText() != null && !filePathFieldIn.getText().isEmpty() && !filePathFieldOut.getText().isEmpty()) {
+        if (filePathFieldOut.getText() != null
+                && filePathFieldIn.getText() != null
+                && !filePathFieldIn.getText().isEmpty()
+                && !filePathFieldOut.getText().isEmpty()) {
             return true;
         } else {
             return false;
@@ -268,8 +282,20 @@ public class GuiView implements View {
     public boolean isSelectedDecryptCheckBox() {
         return decryptCheckBox.isSelected();
     }
+    public boolean isSelectedBruteforceCheckBox() {
+        return bruteforceCheckBox.isSelected();
+    }
+
 
     public void setStartButton(Runnable handler) {
         startButton.setOnAction(e -> handler.run());
     }
+
+    public void setTextFileIn(String textIn) {
+        this.textFileIn.setText(textIn);
+    }
+    public void setTextFileOut(String textOut) {
+        this.textFileOut.setText(textOut);
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.javarush.cryptoanalyzer.ostapenko.controller;
 
+import com.javarush.cryptoanalyzer.ostapenko.utils.FileManager;
 import com.javarush.cryptoanalyzer.ostapenko.view.GuiView;
 import com.javarush.cryptoanalyzer.ostapenko.view.View;
 import javafx.stage.FileChooser;
@@ -27,7 +28,7 @@ public class GUIController extends Controller {
         if (view instanceof GuiView guiView) {
             guiView.setSelectFileButtonInHandler(() -> handlerSelectFileIn(guiView));
             guiView.setSelectFileButtonOutHandler(() -> handlerSelectFileOut(guiView));
-            guiView.setStartButton(() -> handlerStartButton());
+            guiView.setStartButton(() -> handlerStartButton(guiView));
         }
     }
 
@@ -43,6 +44,8 @@ public class GUIController extends Controller {
         }else{
             guiView.setEnabledStartButton(false);
         }
+        guiView.setTextFileIn(FileManager.readFile(guiView.getFilePathFieldIn()));
+        guiView.log("Данные из входного файла отображены в интерфейсе " + file);
     }
     private void handlerSelectFileOut(GuiView guiView) {
         System.out.println("Начат выбор файла выходных данных");
@@ -55,11 +58,15 @@ public class GUIController extends Controller {
             guiView.setEnabledStartButton(true);
         }else{
             guiView.setEnabledStartButton(false);
-        }
+        };
+        guiView.setTextFileOut(FileManager.readFile(guiView.getFilePathFieldOut()));
+        guiView.log("Данные из выходного файла отображены в интерфейсе " + file);
     }
 
-    private void handlerStartButton() {
+    private void handlerStartButton(GuiView guiView) {
         run();
+        guiView.setTextFileOut(FileManager.readFile(guiView.getFilePathFieldOut()));
+        guiView.log("Обработка завершена");
     }
 
 
