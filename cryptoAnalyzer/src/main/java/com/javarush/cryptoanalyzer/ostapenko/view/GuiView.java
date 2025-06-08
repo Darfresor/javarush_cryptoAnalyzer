@@ -354,11 +354,18 @@ public class GuiView implements View {
                 log(SUCCESS);
                 if(!result.getMessage().isEmpty()){
                     log(result.getMessage());
-                    showMessage(result.getMessage());
+                    showInfoMessage(result.getMessage());
                 }
 
             }
-            case ERROR -> System.out.println(EXCEPTION + result.getApplicationException().getMessage());
+            case ERROR -> {
+                System.out.println(EXCEPTION + result.getApplicationException().getMessage());
+                showAlertMessage(result.getApplicationException().getMessage());
+                for(StackTraceElement element : result.getApplicationException().getStackTrace()){
+                    log(String.valueOf(element));
+                }
+
+            }
         }
     }
 
@@ -369,9 +376,15 @@ public class GuiView implements View {
     public void log(String message) {
         logArea.appendText(message + "\n");
     }
-    private void showMessage(String message){
+    private void showInfoMessage(String message){
         Alert infoAlert = new Alert(Alert.AlertType.INFORMATION);
         infoAlert.setTitle("Информация");
+        infoAlert.setContentText(message);
+        infoAlert.showAndWait();
+    }
+    private void showAlertMessage(String message){
+        Alert infoAlert = new Alert(Alert.AlertType.ERROR);
+        infoAlert.setTitle("Ошибка");
         infoAlert.setContentText(message);
         infoAlert.showAndWait();
     }
