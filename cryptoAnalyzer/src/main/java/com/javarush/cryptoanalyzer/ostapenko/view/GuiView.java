@@ -14,7 +14,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.javarush.cryptoanalyzer.ostapenko.constans.ApplicationComplitionConstans.EXCEPTION;
@@ -54,6 +53,9 @@ public class GuiView implements View {
     private Label labelForChangeChar;
     private ComboBox comboBoxChangeChar;
     private Button changeChar;
+    private Label keywordTip;
+    private TextField keyWordContent;
+    private Label keyTip;
 
 
     public GuiView(Stage stage) {
@@ -73,30 +75,37 @@ public class GuiView implements View {
         checkBoxGroup.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
             switch (((RadioButton) newVal).getText()) {
                 case "Шифровать с ключом(Шифр Цезаря)" -> {
+                    disableStaticKeyAndKeyWordObject(true);
                     disableStaticAnalyzeObject(true);
                     disableStaticAnalyzeChangeCharObject(true);
                 }
                 case "Расшифровать с ключом(Шифр Цезаря)" -> {
+                    disableStaticKeyAndKeyWordObject(true);
                     disableStaticAnalyzeObject(true);
                     disableStaticAnalyzeChangeCharObject(true);
                 }
                 case "Расшифровать без ключа(BrutForce для шифра Цезаря)" -> {
+                    disableStaticKeyAndKeyWordObject(true);
                     disableStaticAnalyzeObject(true);
                     disableStaticAnalyzeChangeCharObject(true);
                 }
                 case "Расшифровать статистическим анализом" -> {
+                    disableStaticKeyAndKeyWordObject(true);
                     disableStaticAnalyzeObject(false);
                     disableStaticAnalyzeChangeCharObject(true);
                 }
                 case "Статический анализ - замена символов" -> {
+                    disableStaticKeyAndKeyWordObject(true);
                     disableStaticAnalyzeObject(true);
                     disableStaticAnalyzeChangeCharObject(false);
                 }
-                case "Шифровать словом-ключом(шифр Виженера))" -> {
+                case "Шифровать словом-ключом(шифр Виженера)" -> {
+                    disableStaticKeyAndKeyWordObject(false);
                     disableStaticAnalyzeObject(true);
                     disableStaticAnalyzeChangeCharObject(true);
                 }
                 case "Расшифровать словом-ключом(шифр Виженера)" -> {
+                    disableStaticKeyAndKeyWordObject(false);
                     disableStaticAnalyzeObject(true);
                     disableStaticAnalyzeChangeCharObject(true);
                 }
@@ -119,6 +128,13 @@ public class GuiView implements View {
         comboBoxChangeChar.setDisable(value);
         changeChar.setDisable(value);
     }
+    private void disableStaticKeyAndKeyWordObject(boolean value) {
+        keywordTip.setDisable(value);
+        keyWordContent.setDisable(value);
+        keyTip.setDisable(!value);
+        key.setDisable(!value);
+    }
+
 
     private RadioButton getStaticAnalyzeCheckBox() {
         return staticAnalyzeCheckBox;
@@ -140,12 +156,17 @@ public class GuiView implements View {
     }
 
     private VBox getControlPanelAll() {
-        Label keyTip = new Label("Укажите длину ключа:");
+        keyTip = new Label("Укажите длину ключа:");
         HBox.setMargin(keyTip, new Insets(0, 0, 0, 20));
         int minKeyLenght = 1;
         int maxKeyLength = RussianAlphabet.cyrillicValues().length - 1;
         key = new Spinner<>(minKeyLenght, maxKeyLength, 1);
-        HBox keyInfo = new HBox(10, keyTip, key);
+        keywordTip = new Label("Введите ключ:");
+        keywordTip.setDisable(true);
+        HBox.setMargin(keyTip, new Insets(0, 0, 0, 20));
+        keyWordContent = new TextField();
+        keyWordContent.setDisable(true);
+        HBox keyInfo = new HBox(10, keyTip, key, keywordTip, keyWordContent);
 
         encryptCheckBox = new RadioButton("Шифровать с ключом(Шифр Цезаря)");
         encryptCheckBox.setSelected(true);
@@ -159,10 +180,8 @@ public class GuiView implements View {
         staticAnalyzeChangeChar.setSelected(false);
         vigenereEncryptCheckBox = new RadioButton("Шифровать словом-ключом(шифр Виженера)");
         vigenereEncryptCheckBox.setSelected(false);
-        vigenereEncryptCheckBox.setDisable(true);
         vigenereDecryptCheckBox = new RadioButton("Расшифровать словом-ключом(шифр Виженера)");
         vigenereDecryptCheckBox.setSelected(false);
-        vigenereDecryptCheckBox.setDisable(true);
 
 
         checkBoxGroup = new ToggleGroup();
@@ -290,7 +309,7 @@ public class GuiView implements View {
 
     @Override
     public String[] getParametrs() {
-        String[] parametrs = new String[7];
+        String[] parametrs = new String[8];
         if (isSelectedEncryptCheckBox()) {
             parametrs[0] = "ENCODE";
         }
@@ -310,9 +329,12 @@ public class GuiView implements View {
         if(isSelectedStaticAnalyzeChangeChar()){
             parametrs[0] = "CHANGES_CHAR";
         }
-
-
-
+        if(isSelectedVigenereEncryptCheckBox()){
+            parametrs[0] = "VIGENER_ENCODE";
+        }
+        if(isSelectedVigenereDecryptCheckBox()){
+            parametrs[0] = "VIGENER_DECODE";
+        }
 
         parametrs[1] = filePathFieldIn.getText();
         parametrs[2] = filePathFieldOut.getText();
@@ -320,6 +342,7 @@ public class GuiView implements View {
         parametrs[4] = filePathFieldSource.getText();
         parametrs[5] = String.valueOf(comboBoxSourceChar.getValue());
         parametrs[6] = String.valueOf(comboBoxChangeChar.getValue());
+        parametrs[7] = keyWordContent.getText();
         return parametrs;
     }
 
@@ -416,6 +439,15 @@ public class GuiView implements View {
     public boolean isSelectedStaticAnalyzeChangeChar() {
         return staticAnalyzeChangeChar.isSelected();
     }
+    public boolean isSelectedVigenereEncryptCheckBox() {
+        return vigenereEncryptCheckBox.isSelected();
+    }
+    public boolean isSelectedVigenereDecryptCheckBox() {
+        return vigenereDecryptCheckBox.isSelected();
+    }
+
+
+
 
     public void setStartButton(Runnable handler) {
         startButton.setOnAction(e -> handler.run());
