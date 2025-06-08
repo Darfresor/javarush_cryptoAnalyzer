@@ -352,7 +352,7 @@ public class GuiView implements View {
         switch (result.getResultCode()) {
             case OK -> {
                 log(SUCCESS);
-                if(!result.getMessage().isEmpty()){
+                if(result.getMessage()!=null && !result.getMessage().isEmpty()){
                     log(result.getMessage());
                     showInfoMessage(result.getMessage());
                 }
