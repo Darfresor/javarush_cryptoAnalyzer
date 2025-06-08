@@ -46,6 +46,7 @@ public abstract class Controller {
             case "DECODE" -> FunctionCode.valueOf(DECODE).getFunction();
             case "BRUTEFORCE" -> FunctionCode.valueOf(BRUTEFORCE).getFunction();
             case "STATIC_ANALYZE" -> FunctionCode.valueOf(STATIC_ANALYZE).getFunction();
+            case "CHANGES_CHAR" -> FunctionCode.valueOf(CHANGES_CHAR).getFunction();
             default -> FunctionCode.valueOf(UNSUPPORTED_FUNCTION).getFunction();
         };
     }

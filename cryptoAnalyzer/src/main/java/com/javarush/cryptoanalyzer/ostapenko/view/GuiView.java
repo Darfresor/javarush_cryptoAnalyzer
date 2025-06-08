@@ -28,7 +28,6 @@ public class GuiView implements View {
     private Button selectFileButtonOut;
     private Button selectFileButtonSource;
     private Button showLogButton;
-    private Button changeChar;
     private TextField filePathFieldIn;
     private TextField filePathFieldOut;
     private TextField filePathFieldSource;
@@ -43,17 +42,75 @@ public class GuiView implements View {
     private TextArea textFileIn;
     private TextArea textFileOut;
     private TextArea textFileSource;
+    private Label labelForSource;
+    private ToggleGroup checkBoxGroup;
+    private Label labelForSourceChar;
+    private ComboBox comboBoxSourceChar;
+    private Label labelForChangeChar;
+    private ComboBox comboBoxChangeChar;
+    private Button changeChar;
 
 
     public GuiView(Stage stage) {
         this.stage = stage;
         initUI();
+        setHandlers();
+        stage.show();
     }
 
     private void initUI() {
         stage.setTitle("Криптоанализатор");
         stage.setScene(createScene());
-        stage.show();
+    }
+
+
+    private void setHandlers() {
+        staticAnalyzeCheckBox.setOnAction(e -> {
+            if (staticAnalyzeCheckBox.isSelected()) {
+                disableStaticAnalyzeObject(false);
+            } else {
+                disableStaticAnalyzeObject(true);
+            }
+        });
+        checkBoxGroup.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
+            switch (((RadioButton) newVal).getText()) {
+                case "Шифровать с ключом(Шифр Цезаря)" -> {
+                    System.out.println("Снова нужно отключить компоненты");
+                    disableStaticAnalyzeObject(true);
+                }
+                case "Расшифровать с ключом(Шифр Цезаря)" -> {
+                    disableStaticAnalyzeObject(true);
+                }
+                case "Расшифровать без ключа(BrutForce для шифра Цезаря)" -> {
+                    disableStaticAnalyzeObject(true);
+                }
+                case "Расшифровать статистическим анализом" -> {
+                    disableStaticAnalyzeObject(false);
+                }
+                case "Шифровать словом-ключом(шифр Виженера))" -> {
+                    disableStaticAnalyzeObject(true);
+                }
+                case "Расшифровать словом-ключом(шифр Виженера)" -> {
+                    disableStaticAnalyzeObject(true);
+                }
+            }
+        });
+    }
+
+    private void disableStaticAnalyzeObject(boolean value) {
+        filePathFieldSource.setDisable(value);
+        textFileSource.setDisable(value);
+        selectFileButtonSource.setDisable(value);
+        labelForSource.setDisable(value);
+        labelForSourceChar.setDisable(value);
+        comboBoxSourceChar.setDisable(value);
+        labelForChangeChar.setDisable(value);
+        comboBoxChangeChar.setDisable(value);
+        changeChar.setDisable(value);
+    }
+
+    private RadioButton getStaticAnalyzeCheckBox() {
+        return staticAnalyzeCheckBox;
     }
 
     public Scene createScene() {
@@ -97,7 +154,7 @@ public class GuiView implements View {
         vigenereDecryptCheckBox.setDisable(true);
 
 
-        ToggleGroup checkBoxGroup = new ToggleGroup();
+        checkBoxGroup = new ToggleGroup();
         encryptCheckBox.setToggleGroup(checkBoxGroup);
         decryptCheckBox.setToggleGroup(checkBoxGroup);
         bruteforceCheckBox.setToggleGroup(checkBoxGroup);
@@ -143,7 +200,7 @@ public class GuiView implements View {
         ScrollPane logScrollPanelSource = new ScrollPane(textFileSource);
         logScrollPanelSource.setFitToWidth(true);
         logScrollPanelSource.setFitToHeight(true);
-        Label labelForSource = new Label("Путь к файлу для статистического анализа:");
+        labelForSource = new Label("Путь к файлу для статистического анализа:");
         labelForSource.setDisable(true);
         filePathFieldSource = new TextField();
         filePathFieldSource.setEditable(false);
@@ -152,15 +209,15 @@ public class GuiView implements View {
         selectFileButtonSource = new Button("Выбрать файл");
         selectFileButtonSource.setDisable(true);
 
-        Label labelForSourceChar = new Label("Исходная буква:");
+        labelForSourceChar = new Label("Исходная буква:");
         labelForSourceChar.setDisable(true);
-        ComboBox comboBoxSourceChar = new ComboBox();
+        comboBoxSourceChar = new ComboBox();
         comboBoxSourceChar.setDisable(true);
-        Label labelForChangeChar = new Label("Заменяемая буква:");
+        labelForChangeChar = new Label("Заменяемая буква:");
         labelForChangeChar.setDisable(true);
-        ComboBox comboBoxChangeChar = new ComboBox();
+        comboBoxChangeChar = new ComboBox();
         comboBoxChangeChar.setDisable(true);
-        Button changeChar = new Button("Заменить символы");
+        changeChar = new Button("Заменить символы");
         changeChar.setDisable(true);
 
 
@@ -217,20 +274,27 @@ public class GuiView implements View {
 
     @Override
     public String[] getParametrs() {
-        String[] parametrs = new String[4];
+        String[] parametrs = new String[7];
         if (isSelectedEncryptCheckBox()) {
             parametrs[0] = "ENCODE";
-        };
+        }
+        ;
         ;
         if (isSelectedDecryptCheckBox()) {
             parametrs[0] = "DECODE";
-        };
+        }
+        ;
         if (isSelectedBruteforceCheckBox()) {
             parametrs[0] = "BRUTEFORCE";
-        };
+        }
+        ;
+        if (isSelectedStaticAnalyzeCheckBox()) {
+            parametrs[0] = "STATIC_ANALYZE";
+        }
         parametrs[1] = filePathFieldIn.getText();
         parametrs[2] = filePathFieldOut.getText();
         parametrs[3] = String.valueOf(key.getValue());
+        parametrs[4] = filePathFieldSource.getText();
         return parametrs;
     }
 
@@ -261,15 +325,19 @@ public class GuiView implements View {
     public void setFilePathFieldOut(String text) {
         filePathFieldOut.setText(text);
     }
+
     public void setFilePathFieldSource(String text) {
         filePathFieldSource.setText(text);
     }
+
     public String getFilePathFieldIn() {
         return filePathFieldIn.getText();
     }
+
     public String getFilePathFieldOut() {
         return filePathFieldOut.getText();
     }
+
     public String getFilePathFieldSource() {
         return filePathFieldSource.getText();
     }
@@ -298,8 +366,13 @@ public class GuiView implements View {
     public boolean isSelectedDecryptCheckBox() {
         return decryptCheckBox.isSelected();
     }
+
     public boolean isSelectedBruteforceCheckBox() {
         return bruteforceCheckBox.isSelected();
+    }
+
+    public boolean isSelectedStaticAnalyzeCheckBox() {
+        return staticAnalyzeCheckBox.isSelected();
     }
 
 
@@ -310,9 +383,11 @@ public class GuiView implements View {
     public void setTextFileIn(String textIn) {
         this.textFileIn.setText(textIn);
     }
+
     public void setTextFileOut(String textOut) {
         this.textFileOut.setText(textOut);
     }
+
     public void setTextFileSource(String textSource) {
         this.textFileSource.setText(textSource);
     }
@@ -320,8 +395,6 @@ public class GuiView implements View {
     public void setSelectFileButtonSourceHandler(Runnable handler) {
         selectFileButtonSource.setOnAction(e -> handler.run());
     }
-
-
 
 
 }
