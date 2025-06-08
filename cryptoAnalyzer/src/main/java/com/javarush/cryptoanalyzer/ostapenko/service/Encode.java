@@ -55,8 +55,8 @@ public class Encode implements Function{
             String text = FileManager.readFile(parametrs[1]);
             String result = encrypt(text, shift);
             FileManager.writeFile(result, parametrs[2]);
-            System.out.println(text);
-            System.out.println(result);
+           // System.out.println(text);
+           // System.out.println(result);
         } catch(Exception e){
             e.printStackTrace();
             return new Result(ERROR, new ApplicationException("ошибка при операции кодирования", e));

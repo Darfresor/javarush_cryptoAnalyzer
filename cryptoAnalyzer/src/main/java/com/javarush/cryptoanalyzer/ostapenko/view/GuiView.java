@@ -327,7 +327,14 @@ public class GuiView implements View {
     @Override
     public void printResult(Result result) {
         switch (result.getResultCode()) {
-            case OK -> System.out.println(SUCCESS);
+            case OK -> {
+                log(SUCCESS);
+                if(!result.getMessage().isEmpty()){
+                    log(result.getMessage());
+                    showMessage(result.getMessage());
+                }
+
+            }
             case ERROR -> System.out.println(EXCEPTION + result.getApplicationException().getMessage());
         }
     }
@@ -338,6 +345,12 @@ public class GuiView implements View {
 
     public void log(String message) {
         logArea.appendText(message + "\n");
+    }
+    private void showMessage(String message){
+        Alert infoAlert = new Alert(Alert.AlertType.INFORMATION);
+        infoAlert.setTitle("Информация");
+        infoAlert.setContentText(message);
+        infoAlert.showAndWait();
     }
 
     public void setSelectFileButtonOutHandler(Runnable handler) {

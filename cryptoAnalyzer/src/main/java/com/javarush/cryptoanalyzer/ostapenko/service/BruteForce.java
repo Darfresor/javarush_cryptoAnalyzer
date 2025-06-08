@@ -48,6 +48,7 @@ public class BruteForce implements Function{
 
     @Override
     public Result execute(String[] parametrs) {
+        int finalkey = 0;
         try {
             initAlphabet();
             HashSet<String> dictionary = BrutForceDictionary.getDictionary();
@@ -57,7 +58,6 @@ public class BruteForce implements Function{
             String bestResult = "";
             int bestNumberOfMatches = 0;
             int numberOfMatches = 0;
-            int finalkey = 0;
             for (int i = 0; i < alphabet.length; i++) {
                 numberOfMatches = 0;
                 result = decrypt(text, i);
@@ -76,11 +76,11 @@ public class BruteForce implements Function{
             FileManager.writeFile(bestResult, parametrs[2]);
             System.out.println("Наибольшое кол-во сопавдений = " + bestNumberOfMatches);
             System.out.println("При ключе  = " + finalkey);
-            System.out.println(bestResult);
+            // System.out.println(bestResult);
         } catch(Exception e){
             e.printStackTrace();
             return new Result(ERROR, new ApplicationException("ошибка при операции декодирования", e));
         }
-        return new Result(OK);
+        return new Result(OK, "Наибольшее кол-во сопавдений найдено при ключе = "+ finalkey );
     }
 }
