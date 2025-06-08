@@ -1,14 +1,19 @@
 package com.javarush.cryptoanalyzer.ostapenko.service;
 
 import com.javarush.cryptoanalyzer.ostapenko.entity.Result;
+import com.javarush.cryptoanalyzer.ostapenko.exception.ApplicationException;
 import com.javarush.cryptoanalyzer.ostapenko.utils.FileManager;
 
 import java.util.*;
+
+import static com.javarush.cryptoanalyzer.ostapenko.repository.ResultCode.ERROR;
+import static com.javarush.cryptoanalyzer.ostapenko.repository.ResultCode.OK;
 
 public class StaticAnalyze implements Function {
 
     @Override
     public Result execute(String[] parametrs) {
+        try {
         System.out.println("parametrs = " + Arrays.toString(parametrs));
         String encodeText = FileManager.readFile(parametrs[1]);
         String representativeText = FileManager.readFile(parametrs[4]);
@@ -26,9 +31,13 @@ public class StaticAnalyze implements Function {
         finalMap = buildCharMatchesMap(encodeSortMap, representativeSortMap);
         String result = decodeText(finalMap,encodeText);
         FileManager.writeFile(result, parametrs[2]);
-        System.out.println(result);
+        //System.out.println(result);
+        } catch(Exception e){
+            e.printStackTrace();
+            return new Result(ERROR, new ApplicationException("ошибка при операции статистического анализа", e));
 
-        return null;
+        }
+        return new Result(OK);
     }
 
     private HashMap<Character, Integer> calcCharStatistic(String text) {
