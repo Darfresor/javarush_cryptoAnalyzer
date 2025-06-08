@@ -13,7 +13,7 @@ import java.util.HashSet;
 import static com.javarush.cryptoanalyzer.ostapenko.repository.ResultCode.ERROR;
 import static com.javarush.cryptoanalyzer.ostapenko.repository.ResultCode.OK;
 
-public class BruteForce implements Function{
+public class CaesarBruteForce implements Function{
     private char[] alphabet;
     private HashSet<Character> alphabetSet;
     private HashMap<Character, Integer> alphabetMap;

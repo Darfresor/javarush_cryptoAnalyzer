@@ -12,7 +12,7 @@ import java.util.HashSet;
 import static com.javarush.cryptoanalyzer.ostapenko.repository.ResultCode.ERROR;
 import static com.javarush.cryptoanalyzer.ostapenko.repository.ResultCode.OK;
 
-public class Decode implements Function{
+public class CaesarEncode implements Function{
     private char[] alphabet;
     private HashSet<Character> alphabetSet;
     private HashMap<Character, Integer> alphabetMap;
@@ -23,9 +23,9 @@ public class Decode implements Function{
         alphabetMap = RussianAlphabet.getAlphabetMap();
     }
 
-    private String decrypt(String text, int shift) {
+    private String encrypt(String text, int shift) {
         char[] inputChars = text.toCharArray();
-        char[] decryptedChars = new char[inputChars.length];
+        char[] encryptedChars = new char[inputChars.length];
         int originalPos = 0;
         int newPosition = 0;
         for (int i = 0; i < inputChars.length; i++) {
@@ -33,17 +33,17 @@ public class Decode implements Function{
                     || alphabetSet.contains(Character.toUpperCase(inputChars[i]))
             ) {
                 originalPos = alphabetMap.get(Character.toUpperCase(inputChars[i]));
-                newPosition = (originalPos - shift + alphabet.length) % alphabet.length;
+                newPosition = (originalPos + shift) % alphabet.length;
                 if (!Character.isUpperCase(inputChars[i])) {
-                    decryptedChars[i] = Character.toLowerCase(alphabet[newPosition]);
+                    encryptedChars[i] = Character.toLowerCase(alphabet[newPosition]);
                 } else {
-                    decryptedChars[i] = alphabet[newPosition];
+                    encryptedChars[i] = alphabet[newPosition];
                 }
             } else {
-                decryptedChars[i] = inputChars[i];
+                encryptedChars[i] = inputChars[i];
             }
         }
-        return new String(decryptedChars);
+        return new String(encryptedChars);
     }
 
     @Override
@@ -53,13 +53,13 @@ public class Decode implements Function{
             System.out.println("parametrs = " + Arrays.toString(parametrs));
             int shift = Integer.parseInt(parametrs[3]);
             String text = FileManager.readFile(parametrs[1]);
-            String result = decrypt(text, shift);
+            String result = encrypt(text, shift);
             FileManager.writeFile(result, parametrs[2]);
-            //System.out.println(text);
-            //System.out.println(result);
+           // System.out.println(text);
+           // System.out.println(result);
         } catch(Exception e){
             e.printStackTrace();
-            return new Result(ERROR, new ApplicationException("ошибка при операции декодирования", e));
+            return new Result(ERROR, new ApplicationException("ошибка при операции кодирования", e));
 
         }
         return new Result(OK);
