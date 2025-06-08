@@ -30,6 +30,9 @@ public class GUIController extends Controller {
             guiView.setSelectFileButtonOutHandler(() -> handlerSelectFileOut(guiView));
             guiView.setSelectFileButtonSourceHandler(() -> handlerSelectFileSource(guiView));
             guiView.setStartButton(() -> handlerStartButton(guiView));
+            guiView.setChangeChar(() -> handlerChangeChar(guiView));
+
+
         }
     }
 
@@ -76,6 +79,14 @@ public class GUIController extends Controller {
     }
 
     private void handlerStartButton(GuiView guiView) {
+        guiView.log("Обработка начата");
+        run();
+        guiView.setTextFileOut(FileManager.readFile(guiView.getFilePathFieldOut()));
+        guiView.log("Обработка завершена");
+    }
+
+    private void handlerChangeChar(GuiView guiView) {
+        guiView.log("Обработка начата");
         run();
         guiView.setTextFileOut(FileManager.readFile(guiView.getFilePathFieldOut()));
         guiView.log("Обработка завершена");

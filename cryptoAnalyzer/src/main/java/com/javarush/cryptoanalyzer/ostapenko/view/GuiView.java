@@ -1,6 +1,9 @@
 package com.javarush.cryptoanalyzer.ostapenko.view;
 
+import com.javarush.cryptoanalyzer.ostapenko.constans.RussianAlphabet;
 import com.javarush.cryptoanalyzer.ostapenko.entity.Result;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -11,6 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.javarush.cryptoanalyzer.ostapenko.constans.ApplicationComplitionConstans.EXCEPTION;
@@ -35,6 +39,7 @@ public class GuiView implements View {
     private RadioButton decryptCheckBox;
     private RadioButton bruteforceCheckBox;
     private RadioButton staticAnalyzeCheckBox;
+    private RadioButton staticAnalyzeChangeChar;
     private RadioButton vigenereDecryptCheckBox;
     private RadioButton vigenereEncryptCheckBox;
     private Spinner<Integer> key;
@@ -65,43 +70,49 @@ public class GuiView implements View {
 
 
     private void setHandlers() {
-        staticAnalyzeCheckBox.setOnAction(e -> {
-            if (staticAnalyzeCheckBox.isSelected()) {
-                disableStaticAnalyzeObject(false);
-            } else {
-                disableStaticAnalyzeObject(true);
-            }
-        });
         checkBoxGroup.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
             switch (((RadioButton) newVal).getText()) {
                 case "Шифровать с ключом(Шифр Цезаря)" -> {
-                    System.out.println("Снова нужно отключить компоненты");
                     disableStaticAnalyzeObject(true);
+                    disableStaticAnalyzeChangeCharObject(true);
                 }
                 case "Расшифровать с ключом(Шифр Цезаря)" -> {
                     disableStaticAnalyzeObject(true);
+                    disableStaticAnalyzeChangeCharObject(true);
                 }
                 case "Расшифровать без ключа(BrutForce для шифра Цезаря)" -> {
                     disableStaticAnalyzeObject(true);
+                    disableStaticAnalyzeChangeCharObject(true);
                 }
                 case "Расшифровать статистическим анализом" -> {
                     disableStaticAnalyzeObject(false);
+                    disableStaticAnalyzeChangeCharObject(true);
+                }
+                case "Статический анализ - замена символов" -> {
+                    disableStaticAnalyzeObject(true);
+                    disableStaticAnalyzeChangeCharObject(false);
                 }
                 case "Шифровать словом-ключом(шифр Виженера))" -> {
                     disableStaticAnalyzeObject(true);
+                    disableStaticAnalyzeChangeCharObject(true);
                 }
                 case "Расшифровать словом-ключом(шифр Виженера)" -> {
                     disableStaticAnalyzeObject(true);
+                    disableStaticAnalyzeChangeCharObject(true);
                 }
             }
         });
     }
+
 
     private void disableStaticAnalyzeObject(boolean value) {
         filePathFieldSource.setDisable(value);
         textFileSource.setDisable(value);
         selectFileButtonSource.setDisable(value);
         labelForSource.setDisable(value);
+    }
+
+    private void disableStaticAnalyzeChangeCharObject(boolean value) {
         labelForSourceChar.setDisable(value);
         comboBoxSourceChar.setDisable(value);
         labelForChangeChar.setDisable(value);
@@ -132,9 +143,7 @@ public class GuiView implements View {
         Label keyTip = new Label("Укажите длину ключа:");
         HBox.setMargin(keyTip, new Insets(0, 0, 0, 20));
         int minKeyLenght = 1;
-        //int maxKeyLength = DefaultRussianAlphabet.values().length - 1;
-        //TODO временная замена на константу, вернуть когда все будет перенесено в новый проект
-        int maxKeyLength = 42;
+        int maxKeyLength = RussianAlphabet.cyrillicValues().length - 1;
         key = new Spinner<>(minKeyLenght, maxKeyLength, 1);
         HBox keyInfo = new HBox(10, keyTip, key);
 
@@ -146,6 +155,8 @@ public class GuiView implements View {
         bruteforceCheckBox.setSelected(false);
         staticAnalyzeCheckBox = new RadioButton("Расшифровать статистическим анализом");
         staticAnalyzeCheckBox.setSelected(false);
+        staticAnalyzeChangeChar = new RadioButton("Статический анализ - замена символов");
+        staticAnalyzeChangeChar.setSelected(false);
         vigenereEncryptCheckBox = new RadioButton("Шифровать словом-ключом(шифр Виженера)");
         vigenereEncryptCheckBox.setSelected(false);
         vigenereEncryptCheckBox.setDisable(true);
@@ -159,14 +170,17 @@ public class GuiView implements View {
         decryptCheckBox.setToggleGroup(checkBoxGroup);
         bruteforceCheckBox.setToggleGroup(checkBoxGroup);
         staticAnalyzeCheckBox.setToggleGroup(checkBoxGroup);
+        staticAnalyzeChangeChar.setToggleGroup(checkBoxGroup);
         vigenereEncryptCheckBox.setToggleGroup(checkBoxGroup);
         vigenereDecryptCheckBox.setToggleGroup(checkBoxGroup);
 
-        VBox controlPanelCheck = new VBox(10, encryptCheckBox, decryptCheckBox, bruteforceCheckBox, staticAnalyzeCheckBox, vigenereEncryptCheckBox, vigenereDecryptCheckBox);
+        VBox controlPanelCheck = new VBox(10, encryptCheckBox, decryptCheckBox, bruteforceCheckBox, staticAnalyzeCheckBox,
+                staticAnalyzeChangeChar, vigenereEncryptCheckBox, vigenereDecryptCheckBox);
         VBox.setMargin(encryptCheckBox, new Insets(0, 0, 0, 20));
         VBox.setMargin(decryptCheckBox, new Insets(0, 0, 0, 20));
         VBox.setMargin(bruteforceCheckBox, new Insets(0, 0, 0, 20));
         VBox.setMargin(staticAnalyzeCheckBox, new Insets(0, 0, 0, 20));
+        VBox.setMargin(staticAnalyzeChangeChar, new Insets(0, 0, 0, 20));
         VBox.setMargin(vigenereEncryptCheckBox, new Insets(0, 0, 0, 20));
         VBox.setMargin(vigenereDecryptCheckBox, new Insets(0, 0, 0, 20));
 
@@ -213,10 +227,12 @@ public class GuiView implements View {
         labelForSourceChar.setDisable(true);
         comboBoxSourceChar = new ComboBox();
         comboBoxSourceChar.setDisable(true);
+        setComboBoxSourceChar();
         labelForChangeChar = new Label("Заменяемая буква:");
         labelForChangeChar.setDisable(true);
         comboBoxChangeChar = new ComboBox();
         comboBoxChangeChar.setDisable(true);
+        setComboBoxChangeChar();
         changeChar = new Button("Заменить символы");
         changeChar.setDisable(true);
 
@@ -290,13 +306,23 @@ public class GuiView implements View {
         ;
         if (isSelectedStaticAnalyzeCheckBox()) {
             parametrs[0] = "STATIC_ANALYZE";
+        };
+        if(isSelectedStaticAnalyzeChangeChar()){
+            parametrs[0] = "CHANGES_CHAR";
         }
+
+
+
+
         parametrs[1] = filePathFieldIn.getText();
         parametrs[2] = filePathFieldOut.getText();
         parametrs[3] = String.valueOf(key.getValue());
         parametrs[4] = filePathFieldSource.getText();
+        parametrs[5] = String.valueOf(comboBoxSourceChar.getValue());
+        parametrs[6] = String.valueOf(comboBoxChangeChar.getValue());
         return parametrs;
     }
+
 
     @Override
     public void printResult(Result result) {
@@ -374,10 +400,15 @@ public class GuiView implements View {
     public boolean isSelectedStaticAnalyzeCheckBox() {
         return staticAnalyzeCheckBox.isSelected();
     }
-
+    public boolean isSelectedStaticAnalyzeChangeChar() {
+        return staticAnalyzeChangeChar.isSelected();
+    }
 
     public void setStartButton(Runnable handler) {
         startButton.setOnAction(e -> handler.run());
+    }
+    public void setChangeChar(Runnable handler) {
+        changeChar.setOnAction(e -> handler.run());
     }
 
     public void setTextFileIn(String textIn) {
@@ -394,6 +425,22 @@ public class GuiView implements View {
 
     public void setSelectFileButtonSourceHandler(Runnable handler) {
         selectFileButtonSource.setOnAction(e -> handler.run());
+    }
+
+    public void setComboBoxChangeChar() {
+        ObservableList<String> items = FXCollections.observableArrayList();
+        for (char c : RussianAlphabet.cyrillicValues()) {
+            items.add(String.valueOf(Character.toLowerCase(c)));
+        }
+        comboBoxChangeChar.setItems(items);
+    }
+
+    public void setComboBoxSourceChar() {
+        ObservableList<String> items = FXCollections.observableArrayList();
+        for (char c : RussianAlphabet.cyrillicValues()) {
+            items.add(String.valueOf(Character.toLowerCase(c)));
+        }
+        comboBoxSourceChar.setItems(items);
     }
 
 

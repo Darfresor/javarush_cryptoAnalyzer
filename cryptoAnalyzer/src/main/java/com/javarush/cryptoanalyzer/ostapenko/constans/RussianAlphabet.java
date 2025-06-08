@@ -46,7 +46,9 @@ public enum RussianAlphabet {
     COLON(':', 39),
     EXCLAMATION('!', 40),
     QUESTION('?', 41),
-    SPACE(' ', 42);
+    SPACE(' ', 42),
+    DASH('–',43)
+    ,ELLIPSIS('…',44);
     private final char cyrillicChar;
     private final int position;
 
