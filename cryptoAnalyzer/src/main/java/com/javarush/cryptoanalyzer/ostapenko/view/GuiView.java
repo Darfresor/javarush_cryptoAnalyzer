@@ -77,7 +77,7 @@ public class GuiView implements View {
         int minKeyLenght = 1;
         //int maxKeyLength = DefaultRussianAlphabet.values().length - 1;
         //TODO временная замена на константу, вернуть когда все будет перенесено в новый проект
-        int maxKeyLength = 32;
+        int maxKeyLength = 42;
         key = new Spinner<>(minKeyLenght, maxKeyLength, 1);
         HBox keyInfo = new HBox(10, keyTip, key);
 
