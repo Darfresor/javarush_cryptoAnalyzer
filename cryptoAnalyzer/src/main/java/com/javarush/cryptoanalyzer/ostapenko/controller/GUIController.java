@@ -7,12 +7,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-//TODO  в консоли тоже добавить отображение по умолчанию?
-//TODO ДОбавить ли всплывающий сообщения и свертку лога?
-//TODO добавить значек смены путей между собой
-//TODO сделать валидаци, не допуская одинаковые пути
-//TODO вынести текст в константы
-//TODO выводить в дебаг информацию о ключе + менять счетчик в интерфейсе?
+
+import static com.javarush.cryptoanalyzer.ostapenko.constans.GUIControllerConstans.*;
+
 public class GUIController extends Controller {
 
     public GUIController(View view) {
@@ -37,59 +34,59 @@ public class GUIController extends Controller {
     }
 
     private void handlerSelectFileIn(GuiView guiView) {
-        System.out.println("Начат выбор файла входных данных");
+        System.out.println(START_IN_FILE_CHOOSE);
         FileChooser fileChooser = new FileChooser();
         File file = fileChooser.showOpenDialog(new Stage());
         guiView.setFilePathFieldIn(file.getAbsolutePath());
-        guiView.log("Выбран файл с входными данными: " + file);
-        System.out.println("Выбор файла входных данных завершен");
+        guiView.log(MSG_FOR_LOG_FILE_IN_DETAIL + file);
+        System.out.println(END_IN_FILE_CHOOSE);
         if(guiView.isStartButtonAvailability()){
             guiView.setEnabledStartButton(true);
         }else{
             guiView.setEnabledStartButton(false);
         }
         guiView.setTextFileIn(FileManager.readFile(guiView.getFilePathFieldIn()));
-        guiView.log("Данные из входного файла отображены в интерфейсе " + file);
+        guiView.log(MSG_FOR_LOG_CHOOSE_IN + file);
     }
     private void handlerSelectFileOut(GuiView guiView) {
-        System.out.println("Начат выбор файла выходных данных");
+        System.out.println(START_OUT_FILE_CHOOSE);
         FileChooser fileChooser = new FileChooser();
         File file = fileChooser.showOpenDialog(new Stage());
         guiView.setFilePathFieldOut(file.getAbsolutePath());
-        guiView.log("Выбран файл с выходными данными: " + file);
-        System.out.println("Выбор файла выходных данных завершен");
+        guiView.log(MSG_FOR_LOG_FILE_OUT_DETAIL + file);
+        System.out.println(END_OUT_FILE_CHOOSE);
         if(guiView.isStartButtonAvailability()){
             guiView.setEnabledStartButton(true);
         }else{
             guiView.setEnabledStartButton(false);
         };
         guiView.setTextFileOut(FileManager.readFile(guiView.getFilePathFieldOut()));
-        guiView.log("Данные из выходного файла отображены в интерфейсе " + file);
+        guiView.log(MSG_FOR_LOG_CHOOSE_OUT + file);
     }
 
     private void handlerSelectFileSource(GuiView guiView) {
-        System.out.println("Начат выбор файла для статистического анализа");
+        System.out.println(START_STATIC_FILE_CHOOSE);
         FileChooser fileChooser = new FileChooser();
         File file = fileChooser.showOpenDialog(new Stage());
         guiView.setFilePathFieldSource(file.getAbsolutePath());
-        guiView.log("Выбран файл с со статистическими данными: " + file);
-        System.out.println("Выбор файла статистических данных завершен");
+        guiView.log(MSG_FOR_LOG_FILE_STATIC_DETAIL + file);
+        System.out.println(END_STATIC_FILE_CHOOSE);
         guiView.setTextFileSource(FileManager.readFile(guiView.getFilePathFieldSource()));
-        guiView.log("Данные из статистического файла отображены в интерфейсе " + file);
+        guiView.log(MSG_FOR_LOG_CHOOSE_STATIC + file);
     }
 
     private void handlerStartButton(GuiView guiView) {
-        guiView.log("Обработка начата");
+        guiView.log(MSG_FOR_LOG_START_FUNCTION);
         run();
         guiView.setTextFileOut(FileManager.readFile(guiView.getFilePathFieldOut()));
-        guiView.log("Обработка завершена");
+        guiView.log(MSG_FOR_LOG_END_FUNCTION);
     }
 
     private void handlerChangeChar(GuiView guiView) {
-        guiView.log("Обработка начата");
+        guiView.log(MSG_FOR_LOG_START_FUNCTION);
         run();
         guiView.setTextFileOut(FileManager.readFile(guiView.getFilePathFieldOut()));
-        guiView.log("Обработка завершена");
+        guiView.log(MSG_FOR_LOG_END_FUNCTION);
     }
 
 
