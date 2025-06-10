@@ -22,6 +22,7 @@ public class GUIController extends Controller {
     }
 
     private void setupEventHandlers() {
+        //TODO instanceof?, view и все через абстрации?
         if (view instanceof GuiView guiView) {
             guiView.setSelectFileButtonInHandler(() -> handlerSelectFileIn(guiView));
             guiView.setSelectFileButtonOutHandler(() -> handlerSelectFileOut(guiView));

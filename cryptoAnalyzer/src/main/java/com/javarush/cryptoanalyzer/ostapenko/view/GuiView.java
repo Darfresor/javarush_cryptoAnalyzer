@@ -55,7 +55,7 @@ public class GuiView implements View {
     private TextField keyWordContent;
     private Label keyTip;
 
-
+    //TODO как разделить или преобразовать для удобства управления, по мере роста компонентов?
     public GuiView(Stage stage) {
         this.stage = stage;
         initUI();

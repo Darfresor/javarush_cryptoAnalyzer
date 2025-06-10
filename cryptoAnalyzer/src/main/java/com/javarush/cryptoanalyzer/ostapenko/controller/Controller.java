@@ -31,6 +31,7 @@ public abstract class Controller {
             Function function = getFunction(mode);
             Result result = function.execute(parametrs);
             view.printResult(result);
+            //TODO передача команд изменения интерфейса после работы функции?
         } catch (RuntimeException e) {
             view.printResult(new Result(ResultCode.ERROR,
                     new ApplicationException("Ошибка в работе приложения", e)));
