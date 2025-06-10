@@ -16,12 +16,10 @@ import javafx.stage.Stage;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.javarush.cryptoanalyzer.ostapenko.constans.ApplicationComplitionConstans.EXCEPTION;
-import static com.javarush.cryptoanalyzer.ostapenko.constans.ApplicationComplitionConstans.SUCCESS;
+import static com.javarush.cryptoanalyzer.ostapenko.constans.ApplicationComplitionConstans.*;
+import static com.javarush.cryptoanalyzer.ostapenko.constans.GuiViewConstans.*;
 
-//TODO вынести текст в константы
-//TODO разделить на методы init component, actionlistener component, и в конце уже вызов сцены с ее параметрами.
-//Сделать отдельный класс унаследованный от stage и туда перенести логику?
+
 public class GuiView implements View {
     private Map<String, Runnable> handlers = new HashMap<>();
 
@@ -66,7 +64,7 @@ public class GuiView implements View {
     }
 
     private void initUI() {
-        stage.setTitle("Криптоанализатор");
+        stage.setTitle(STAGE_TITLE);
         stage.setScene(createScene());
     }
 
@@ -74,37 +72,22 @@ public class GuiView implements View {
     private void setHandlers() {
         checkBoxGroup.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
             switch (((RadioButton) newVal).getText()) {
-                case "Шифровать с ключом(Шифр Цезаря)" -> {
+                case CAESAR_ENCODE, CAESAR_DECODE, CAESAR_BRUTE_FORCE -> {
                     disableStaticKeyAndKeyWordObject(true);
                     disableStaticAnalyzeObject(true);
                     disableStaticAnalyzeChangeCharObject(true);
                 }
-                case "Расшифровать с ключом(Шифр Цезаря)" -> {
-                    disableStaticKeyAndKeyWordObject(true);
-                    disableStaticAnalyzeObject(true);
-                    disableStaticAnalyzeChangeCharObject(true);
-                }
-                case "Расшифровать без ключа(BrutForce для шифра Цезаря)" -> {
-                    disableStaticKeyAndKeyWordObject(true);
-                    disableStaticAnalyzeObject(true);
-                    disableStaticAnalyzeChangeCharObject(true);
-                }
-                case "Расшифровать статистическим анализом" -> {
+                case STATIC_ANALYZE -> {
                     disableStaticKeyAndKeyWordObject(true);
                     disableStaticAnalyzeObject(false);
                     disableStaticAnalyzeChangeCharObject(true);
                 }
-                case "Статический анализ - замена символов" -> {
+                case CHANGE_CHAR -> {
                     disableStaticKeyAndKeyWordObject(true);
                     disableStaticAnalyzeObject(true);
                     disableStaticAnalyzeChangeCharObject(false);
                 }
-                case "Шифровать словом-ключом(шифр Виженера)" -> {
-                    disableStaticKeyAndKeyWordObject(false);
-                    disableStaticAnalyzeObject(true);
-                    disableStaticAnalyzeChangeCharObject(true);
-                }
-                case "Расшифровать словом-ключом(шифр Виженера)" -> {
+                case VIGENERE_ENCODE, VIGENERE_DECODE -> {
                     disableStaticKeyAndKeyWordObject(false);
                     disableStaticAnalyzeObject(true);
                     disableStaticAnalyzeChangeCharObject(true);
@@ -136,12 +119,7 @@ public class GuiView implements View {
     }
 
 
-    private RadioButton getStaticAnalyzeCheckBox() {
-        return staticAnalyzeCheckBox;
-    }
-
     public Scene createScene() {
-        //TODO вынести в константы названия кнопок
         HBox selectionPanelAll = getPathFilePanel();
         VBox controlPanelAll = getControlPanelAll();
         VBox logPaneAll = getLogPane();
@@ -156,31 +134,31 @@ public class GuiView implements View {
     }
 
     private VBox getControlPanelAll() {
-        keyTip = new Label("Укажите длину ключа:");
+        keyTip = new Label(TIP_INT_KEY);
         HBox.setMargin(keyTip, new Insets(0, 0, 0, 20));
-        int minKeyLenght = 1;
+        int minKeyLenght = INT_KEY_MIX_VALUE;
         int maxKeyLength = RussianAlphabet.cyrillicValues().length - 1;
         key = new Spinner<>(minKeyLenght, maxKeyLength, 1);
-        keywordTip = new Label("Введите ключ:");
+        keywordTip = new Label(TIP_STR_KEY);
         keywordTip.setDisable(true);
         HBox.setMargin(keyTip, new Insets(0, 0, 0, 20));
         keyWordContent = new TextField();
         keyWordContent.setDisable(true);
         HBox keyInfo = new HBox(10, keyTip, key, keywordTip, keyWordContent);
 
-        encryptCheckBox = new RadioButton("Шифровать с ключом(Шифр Цезаря)");
+        encryptCheckBox = new RadioButton(CAESAR_ENCODE);
         encryptCheckBox.setSelected(true);
-        decryptCheckBox = new RadioButton("Расшифровать с ключом(Шифр Цезаря)");
+        decryptCheckBox = new RadioButton(CAESAR_DECODE);
         decryptCheckBox.setSelected(false);
-        bruteforceCheckBox = new RadioButton("Расшифровать без ключа(BrutForce для шифра Цезаря)");
+        bruteforceCheckBox = new RadioButton(CAESAR_BRUTE_FORCE);
         bruteforceCheckBox.setSelected(false);
-        staticAnalyzeCheckBox = new RadioButton("Расшифровать статистическим анализом");
+        staticAnalyzeCheckBox = new RadioButton(STATIC_ANALYZE);
         staticAnalyzeCheckBox.setSelected(false);
-        staticAnalyzeChangeChar = new RadioButton("Статический анализ - замена символов");
+        staticAnalyzeChangeChar = new RadioButton(CHANGE_CHAR);
         staticAnalyzeChangeChar.setSelected(false);
-        vigenereEncryptCheckBox = new RadioButton("Шифровать словом-ключом(шифр Виженера)");
+        vigenereEncryptCheckBox = new RadioButton(VIGENERE_ENCODE);
         vigenereEncryptCheckBox.setSelected(false);
-        vigenereDecryptCheckBox = new RadioButton("Расшифровать словом-ключом(шифр Виженера)");
+        vigenereDecryptCheckBox = new RadioButton(VIGENERE_DECODE);
         vigenereDecryptCheckBox.setSelected(false);
 
 
@@ -214,59 +192,59 @@ public class GuiView implements View {
     }
 
     private HBox getPathFilePanel() {
-        textFileIn = new TextArea("Здесь будут данные входного файла");
+        textFileIn = new TextArea(DEFAULT_IN_AREA_TEXT);
         textFileIn.setEditable(false);
         textFileIn.setWrapText(true);
         ScrollPane logScrollPanelIn = new ScrollPane(textFileIn);
         logScrollPanelIn.setFitToWidth(true);
         logScrollPanelIn.setFitToHeight(true);
-        Label labelForInput = new Label("Путь к файлу с входными данными:");
+        Label labelForInput = new Label(LABEL_AREA_TEXT_IN);
         filePathFieldIn = new TextField();
         filePathFieldIn.setEditable(false);
         HBox.setHgrow(filePathFieldIn, Priority.ALWAYS);
-        selectFileButtonIn = new Button("Выбрать файл");
+        selectFileButtonIn = new Button(CHOOSE_FILE);
 
-        textFileSource = new TextArea("Здесь будут данные файла для статистического анализа");
+        textFileSource = new TextArea(DEFAULT_STATIC_AREA_TEXT);
         textFileSource.setEditable(false);
         textFileSource.setWrapText(true);
         textFileSource.setDisable(true);
         ScrollPane logScrollPanelSource = new ScrollPane(textFileSource);
         logScrollPanelSource.setFitToWidth(true);
         logScrollPanelSource.setFitToHeight(true);
-        labelForSource = new Label("Путь к файлу для статистического анализа:");
+        labelForSource = new Label(LABEL_AREA_TEXT_STATIC);
         labelForSource.setDisable(true);
         filePathFieldSource = new TextField();
         filePathFieldSource.setEditable(false);
         filePathFieldSource.setDisable(true);
         HBox.setHgrow(filePathFieldSource, Priority.ALWAYS);
-        selectFileButtonSource = new Button("Выбрать файл");
+        selectFileButtonSource = new Button(CHOOSE_FILE);
         selectFileButtonSource.setDisable(true);
 
-        labelForSourceChar = new Label("Исходная буква:");
+        labelForSourceChar = new Label(LABEL_SOURCE_CHAR);
         labelForSourceChar.setDisable(true);
         comboBoxSourceChar = new ComboBox();
         comboBoxSourceChar.setDisable(true);
         setComboBoxSourceChar();
-        labelForChangeChar = new Label("Заменяемая буква:");
+        labelForChangeChar = new Label(LABEL_TARGET_CHAR);
         labelForChangeChar.setDisable(true);
         comboBoxChangeChar = new ComboBox();
         comboBoxChangeChar.setDisable(true);
         setComboBoxChangeChar();
-        changeChar = new Button("Заменить символы");
+        changeChar = new Button(BUTTON_CHAGE_CHAR);
         changeChar.setDisable(true);
 
 
-        textFileOut = new TextArea("Здесь будут данные выходного файла");
+        textFileOut = new TextArea(DEFAULT_OUT_AREA_TEXT);
         textFileOut.setEditable(false);
         textFileOut.setWrapText(true);
         ScrollPane logScrollPanelOut = new ScrollPane(textFileOut);
         logScrollPanelOut.setFitToWidth(true);
         logScrollPanelOut.setFitToHeight(true);
-        Label labelForOutput = new Label("Путь к файлу с выходными данными:");
+        Label labelForOutput = new Label(LABEL_AREA_TEXT_OUT);
         filePathFieldOut = new TextField();
         filePathFieldOut.setEditable(false);
         HBox.setHgrow(filePathFieldOut, Priority.ALWAYS);
-        selectFileButtonOut = new Button("Выбрать файл");
+        selectFileButtonOut = new Button(CHOOSE_FILE);
 
 
         HBox selectionPanelIn = new HBox(10, labelForInput, filePathFieldIn, selectFileButtonIn);
@@ -288,7 +266,7 @@ public class GuiView implements View {
     }
 
     private VBox getLogPane() {
-        showLogButton = new Button("Скрыть лог");
+        showLogButton = new Button(BUTTON_DISABLE_LOG);
 
 
         logArea = new TextArea();
@@ -378,13 +356,13 @@ public class GuiView implements View {
     }
     private void showInfoMessage(String message){
         Alert infoAlert = new Alert(Alert.AlertType.INFORMATION);
-        infoAlert.setTitle("Информация");
+        infoAlert.setTitle(TITLE_INFORMATION);
         infoAlert.setContentText(message);
         infoAlert.showAndWait();
     }
     private void showAlertMessage(String message){
         Alert infoAlert = new Alert(Alert.AlertType.ERROR);
-        infoAlert.setTitle("Ошибка");
+        infoAlert.setTitle(TITLE_ERROR);
         infoAlert.setContentText(message);
         infoAlert.showAndWait();
     }

@@ -1,0 +1,28 @@
+package com.javarush.cryptoanalyzer.ostapenko.constans;
+
+public class GuiViewConstans {
+    public static final String STAGE_TITLE = "Криптоанализатор";
+    public static final String CAESAR_ENCODE = "Шифровать с ключом(Шифр Цезаря)";
+    public static final String CAESAR_DECODE = "Расшифровать с ключом(Шифр Цезаря)";
+    public static final String CAESAR_BRUTE_FORCE = "Расшифровать без ключа(BrutForce для шифра Цезаря)";
+    public static final String STATIC_ANALYZE = "Расшифровать статистическим анализом";
+    public static final String CHANGE_CHAR = "Статический анализ - замена символов";
+    public static final String VIGENERE_ENCODE = "Шифровать словом-ключом(шифр Виженера)";
+    public static final String VIGENERE_DECODE = "Расшифровать словом-ключом(шифр Виженера)";
+    public static final String TIP_INT_KEY = "Укажите длину ключа:";
+    public static final String TIP_STR_KEY = "Введите ключ:";
+    public static final int INT_KEY_MIX_VALUE = 1;
+    public static final String DEFAULT_IN_AREA_TEXT = "Здесь будут данные входного файла";
+    public static final String LABEL_AREA_TEXT_IN = "Путь к файлу с входными данными:";
+    public static final String CHOOSE_FILE = "Выбрать файл";
+    public static final String DEFAULT_STATIC_AREA_TEXT = "Здесь будут данные файла для статистического анализа";
+    public static final String LABEL_AREA_TEXT_STATIC = "Путь к файлу с входными данными:";
+    public static final String DEFAULT_OUT_AREA_TEXT = "Здесь будут данные выходного файла";
+    public static final String LABEL_AREA_TEXT_OUT = "Путь к файлу с выходными данными:";
+    public static final String BUTTON_CHAGE_CHAR = "Заменить символы";
+    public static final String LABEL_SOURCE_CHAR = "Исходная буква:";
+    public static final String LABEL_TARGET_CHAR = "Заменяемая буква:";
+    public static final String BUTTON_DISABLE_LOG = "Скрыть лог";
+    public static final String TITLE_INFORMATION = "Информация";
+    public static final String TITLE_ERROR = "Ошибка";
+}
