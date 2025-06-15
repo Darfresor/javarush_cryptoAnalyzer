@@ -1,5 +1,7 @@
 package com.javarush.cryptoanalyzer.ostapenko.view;
 
+import com.javarush.cryptoanalyzer.ostapenko.constans.FunctionCodeConstans;
+import com.javarush.cryptoanalyzer.ostapenko.constans.GuiViewConstans;
 import com.javarush.cryptoanalyzer.ostapenko.constans.RussianAlphabet;
 import com.javarush.cryptoanalyzer.ostapenko.entity.Result;
 import com.javarush.cryptoanalyzer.ostapenko.utils.FileManager;
@@ -18,11 +20,13 @@ import javafx.stage.Stage;
 import java.io.File;
 
 import static com.javarush.cryptoanalyzer.ostapenko.constans.ApplicationComplitionConstans.*;
+import static com.javarush.cryptoanalyzer.ostapenko.constans.FunctionCodeConstans.*;
+import static com.javarush.cryptoanalyzer.ostapenko.constans.FunctionCodeConstans.STATIC_ANALYZE;
 import static com.javarush.cryptoanalyzer.ostapenko.constans.GuiViewConstans.*;
 
 
 public class GuiView implements View {
-
+    private String lastClickedButtonId;
     private final Stage stage;
     private TextArea logArea;
     private Button selectFileButtonIn;
@@ -71,8 +75,9 @@ public class GuiView implements View {
 
     private void setHandlers() {
         checkBoxGroup.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
-            switch (((RadioButton) newVal).getText()) {
-                case CAESAR_ENCODE, CAESAR_DECODE, CAESAR_BRUTE_FORCE -> {
+            startButton.setId(((RadioButton) newVal).getId());
+            switch (((RadioButton) newVal).getId()) {
+                case ENCODE, DECODE, BRUTEFORCE -> {
                     disableStaticKeyAndKeyWordObject(true);
                     disableStaticAnalyzeObject(true);
                     disableStaticAnalyzeChangeCharObject(true);
@@ -82,12 +87,12 @@ public class GuiView implements View {
                     disableStaticAnalyzeObject(false);
                     disableStaticAnalyzeChangeCharObject(true);
                 }
-                case CHANGE_CHAR -> {
+                case CHANGES_CHAR -> {
                     disableStaticKeyAndKeyWordObject(true);
                     disableStaticAnalyzeObject(true);
                     disableStaticAnalyzeChangeCharObject(false);
                 }
-                case VIGENERE_ENCODE, VIGENERE_DECODE -> {
+                case VIGENER_ENCODE, VIGENER_DECODE -> {
                     disableStaticKeyAndKeyWordObject(false);
                     disableStaticAnalyzeObject(true);
                     disableStaticAnalyzeChangeCharObject(true);
@@ -151,18 +156,25 @@ public class GuiView implements View {
         HBox keyInfo = new HBox(10, keyTip, key, keywordTip, keyWordContent);
 
         encryptCheckBox = new RadioButton(CAESAR_ENCODE);
+        encryptCheckBox.setId(ENCODE);
         encryptCheckBox.setSelected(true);
         decryptCheckBox = new RadioButton(CAESAR_DECODE);
+        decryptCheckBox.setId(DECODE);
         decryptCheckBox.setSelected(false);
         bruteforceCheckBox = new RadioButton(CAESAR_BRUTE_FORCE);
+        bruteforceCheckBox.setId(BRUTEFORCE);
         bruteforceCheckBox.setSelected(false);
-        staticAnalyzeCheckBox = new RadioButton(STATIC_ANALYZE);
+        staticAnalyzeCheckBox = new RadioButton(GuiViewConstans.STATIC_ANALYZE);
+        staticAnalyzeCheckBox.setId(STATIC_ANALYZE);
         staticAnalyzeCheckBox.setSelected(false);
         staticAnalyzeChangeChar = new RadioButton(CHANGE_CHAR);
+        staticAnalyzeChangeChar.setId(FunctionCodeConstans.CHANGES_CHAR);
         staticAnalyzeChangeChar.setSelected(false);
         vigenereEncryptCheckBox = new RadioButton(VIGENERE_ENCODE);
+        vigenereEncryptCheckBox.setId(FunctionCodeConstans.VIGENER_ENCODE);
         vigenereEncryptCheckBox.setSelected(false);
         vigenereDecryptCheckBox = new RadioButton(VIGENERE_DECODE);
+        vigenereDecryptCheckBox.setId(FunctionCodeConstans.VIGENER_DECODE);
         vigenereDecryptCheckBox.setSelected(false);
 
 
@@ -186,6 +198,7 @@ public class GuiView implements View {
         VBox.setMargin(vigenereDecryptCheckBox, new Insets(0, 0, 0, 20));
 
         startButton = new Button("Запустить обработку");
+        startButton.setId(ENCODE);
         startButton.setDisable(true);
         HBox.setMargin(startButton, new Insets(0, 0, 0, 20));
         HBox controlPanelStart = new HBox(10, startButton);
@@ -235,6 +248,7 @@ public class GuiView implements View {
         comboBoxChangeChar.setDisable(true);
         setComboBoxChangeChar();
         changeChar = new Button(BUTTON_CHAGE_CHAR);
+        changeChar.setId(CHANGES_CHAR);
         changeChar.setDisable(true);
 
 
@@ -291,41 +305,16 @@ public class GuiView implements View {
 
     @Override
     public String[] getParametrs() {
-        String[] parametrs = new String[8];
-        if (isSelectedEncryptCheckBox()) {
-            parametrs[0] = "ENCODE";
-        }
-        ;
-        ;
-        if (isSelectedDecryptCheckBox()) {
-            parametrs[0] = "DECODE";
-        }
-        ;
-        if (isSelectedBruteforceCheckBox()) {
-            parametrs[0] = "BRUTEFORCE";
-        }
-        ;
-        if (isSelectedStaticAnalyzeCheckBox()) {
-            parametrs[0] = "STATIC_ANALYZE";
-        };
-        if(isSelectedStaticAnalyzeChangeChar()){
-            parametrs[0] = "CHANGES_CHAR";
-        }
-        if(isSelectedVigenereEncryptCheckBox()){
-            parametrs[0] = "VIGENER_ENCODE";
-        }
-        if(isSelectedVigenereDecryptCheckBox()){
-            parametrs[0] = "VIGENER_DECODE";
-        }
-
-        parametrs[1] = filePathFieldIn.getText();
-        parametrs[2] = filePathFieldOut.getText();
-        parametrs[3] = String.valueOf(key.getValue());
-        parametrs[4] = filePathFieldSource.getText();
-        parametrs[5] = String.valueOf(comboBoxSourceChar.getValue());
-        parametrs[6] = String.valueOf(comboBoxChangeChar.getValue());
-        parametrs[7] = keyWordContent.getText();
-        return parametrs;
+        String[] parameters = new String[8];
+        parameters[0] = lastClickedButtonId;
+        parameters[1] = filePathFieldIn.getText();
+        parameters[2] = filePathFieldOut.getText();
+        parameters[3] = String.valueOf(key.getValue());
+        parameters[4] = filePathFieldSource.getText();
+        parameters[5] = String.valueOf(comboBoxSourceChar.getValue());
+        parameters[6] = String.valueOf(comboBoxChangeChar.getValue());
+        parameters[7] = keyWordContent.getText();
+        return parameters;
     }
 
 
@@ -429,37 +418,18 @@ public class GuiView implements View {
     }
 
 
-    public boolean isSelectedEncryptCheckBox() {
-        return encryptCheckBox.isSelected();
-    }
-
-
-    public boolean isSelectedDecryptCheckBox() {
-        return decryptCheckBox.isSelected();
-    }
-
-    public boolean isSelectedBruteforceCheckBox() {
-        return bruteforceCheckBox.isSelected();
-    }
-
-    public boolean isSelectedStaticAnalyzeCheckBox() {
-        return staticAnalyzeCheckBox.isSelected();
-    }
-    public boolean isSelectedStaticAnalyzeChangeChar() {
-        return staticAnalyzeChangeChar.isSelected();
-    }
-    public boolean isSelectedVigenereEncryptCheckBox() {
-        return vigenereEncryptCheckBox.isSelected();
-    }
-    public boolean isSelectedVigenereDecryptCheckBox() {
-        return vigenereDecryptCheckBox.isSelected();
-    }
-
-
     public void setAllButtonHandler(Runnable handler) {
-        startButton.setOnAction(e -> handler.run());
-        changeChar.setOnAction(e -> handler.run());
+        setButtonHandler(startButton,  handler);
+        setButtonHandler(changeChar,  handler);
     }
+
+    private void setButtonHandler(Button button, Runnable handler  ){
+        button.setOnAction(e -> {
+            lastClickedButtonId = button.getId();
+            handler.run();
+        });
+    }
+
 
     public void setTextFileIn(String textIn) {
         this.textFileIn.setText(textIn);
