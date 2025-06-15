@@ -1,5 +1,6 @@
 package com.javarush.cryptoanalyzer.ostapenko.service;
 
+import com.javarush.cryptoanalyzer.ostapenko.constans.GuiViewConstans;
 import com.javarush.cryptoanalyzer.ostapenko.entity.Result;
 import com.javarush.cryptoanalyzer.ostapenko.exception.ApplicationException;
 import com.javarush.cryptoanalyzer.ostapenko.utils.FileManager;
@@ -18,12 +19,12 @@ public class ChangesChar implements Function{
             String result = changeChar(decodeText,parametrs[5].toCharArray()[0], parametrs[6].toCharArray()[0]);
             FileManager.writeFile(result, parametrs[2]);
             //System.out.println(result);
+            return new Result(OK, new String[]{GuiViewConstans.UPDATE_AREA_FILE_OUT});
         } catch(Exception e){
             e.printStackTrace();
             return new Result(ERROR, new ApplicationException("ошибка при операции замены символов в тексте", e));
 
         }
-        return new Result(OK);
     }
 
     private String changeChar(String inputTxt, char source, char target){

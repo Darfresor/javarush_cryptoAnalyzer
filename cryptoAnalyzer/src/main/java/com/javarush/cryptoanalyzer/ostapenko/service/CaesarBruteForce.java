@@ -1,5 +1,6 @@
 package com.javarush.cryptoanalyzer.ostapenko.service;
 
+import com.javarush.cryptoanalyzer.ostapenko.constans.GuiViewConstans;
 import com.javarush.cryptoanalyzer.ostapenko.constans.RussianAlphabet;
 import com.javarush.cryptoanalyzer.ostapenko.entity.Result;
 import com.javarush.cryptoanalyzer.ostapenko.exception.ApplicationException;
@@ -77,10 +78,10 @@ public class CaesarBruteForce implements Function{
             System.out.println("Наибольшое кол-во сопавдений = " + bestNumberOfMatches);
             System.out.println("При ключе  = " + finalkey);
             // System.out.println(bestResult);
+            return new Result(OK, new String[]{GuiViewConstans.UPDATE_AREA_FILE_OUT}, "Наибольшее кол-во сопавдений найдено при ключе = "+ finalkey );
         } catch(Exception e){
             e.printStackTrace();
             return new Result(ERROR, new ApplicationException("ошибка при операции декодирования", e));
         }
-        return new Result(OK, "Наибольшее кол-во сопавдений найдено при ключе = "+ finalkey );
     }
 }

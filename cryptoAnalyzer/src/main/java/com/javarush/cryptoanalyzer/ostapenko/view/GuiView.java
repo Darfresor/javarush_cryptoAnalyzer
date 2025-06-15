@@ -120,6 +120,7 @@ public class GuiView implements View {
         comboBoxChangeChar.setDisable(value);
         changeChar.setDisable(value);
     }
+
     private void disableStaticKeyAndKeyWordObject(boolean value) {
         keywordTip.setDisable(value);
         keyWordContent.setDisable(value);
@@ -187,8 +188,7 @@ public class GuiView implements View {
         vigenereEncryptCheckBox.setToggleGroup(checkBoxGroup);
         vigenereDecryptCheckBox.setToggleGroup(checkBoxGroup);
 
-        VBox controlPanelCheck = new VBox(10, encryptCheckBox, decryptCheckBox, bruteforceCheckBox, staticAnalyzeCheckBox,
-                staticAnalyzeChangeChar, vigenereEncryptCheckBox, vigenereDecryptCheckBox);
+        VBox controlPanelCheck = new VBox(10, encryptCheckBox, decryptCheckBox, bruteforceCheckBox, staticAnalyzeCheckBox, staticAnalyzeChangeChar, vigenereEncryptCheckBox, vigenereDecryptCheckBox);
         VBox.setMargin(encryptCheckBox, new Insets(0, 0, 0, 20));
         VBox.setMargin(decryptCheckBox, new Insets(0, 0, 0, 20));
         VBox.setMargin(bruteforceCheckBox, new Insets(0, 0, 0, 20));
@@ -323,19 +323,42 @@ public class GuiView implements View {
         switch (result.getResultCode()) {
             case OK -> {
                 log(SUCCESS);
-                if(result.getMessage()!=null && !result.getMessage().isEmpty()){
+                if (result.getMessage() != null && !result.getMessage().isEmpty()) {
                     log(result.getMessage());
                     showInfoMessage(result.getMessage());
                 }
+               runGUICommand(result);
+
 
             }
             case ERROR -> {
                 System.out.println(EXCEPTION + result.getApplicationException().getMessage());
                 showAlertMessage(result.getApplicationException().getMessage());
-                for(StackTraceElement element : result.getApplicationException().getStackTrace()){
+                for (StackTraceElement element : result.getApplicationException().getStackTrace()) {
                     log(String.valueOf(element));
                 }
 
+            }
+        }
+    }
+
+
+    private void runGUICommand(Result result){
+        String command;
+        if (result.getCommands() != null && !result.getCommands()[0].isEmpty()) {
+            command = result.getCommands()[0];
+        }else{
+            command = NON_GUI_COMMAND;
+        }
+        switch(command){
+            case UPDATE_AREA_FILE_OUT->{
+                setTextFileOut(FileManager.readFile(getFilePathFieldOut()));
+            }
+            case NON_GUI_COMMAND->{
+                System.out.println(NON_GUI_COMMAND_TEXT);
+            }
+            default -> {
+                System.out.println(UNKNOWN_COMMAND_TEXT);
             }
         }
     }
@@ -349,9 +372,9 @@ public class GuiView implements View {
             setFilePathFieldIn(file.getAbsolutePath());
             log(MSG_FOR_LOG_FILE_IN_DETAIL + file);
             System.out.println(END_IN_FILE_CHOOSE);
-            if(isStartButtonAvailability()){
+            if (isStartButtonAvailability()) {
                 setEnabledStartButton(true);
-            }else{
+            } else {
                 setEnabledStartButton(false);
             }
             setTextFileIn(FileManager.readFile(getFilePathFieldIn()));
@@ -363,19 +386,20 @@ public class GuiView implements View {
     public void log(String message) {
         logArea.appendText(message + "\n");
     }
-    private void showInfoMessage(String message){
+
+    private void showInfoMessage(String message) {
         Alert infoAlert = new Alert(Alert.AlertType.INFORMATION);
         infoAlert.setTitle(TITLE_INFORMATION);
         infoAlert.setContentText(message);
         infoAlert.showAndWait();
     }
-    private void showAlertMessage(String message){
+
+    private void showAlertMessage(String message) {
         Alert infoAlert = new Alert(Alert.AlertType.ERROR);
         infoAlert.setTitle(TITLE_ERROR);
         infoAlert.setContentText(message);
         infoAlert.showAndWait();
     }
-
 
 
     public void setFilePathFieldIn(String text) {
@@ -403,10 +427,7 @@ public class GuiView implements View {
     }
 
     public boolean isStartButtonAvailability() {
-        if (filePathFieldOut.getText() != null
-                && filePathFieldIn.getText() != null
-                && !filePathFieldIn.getText().isEmpty()
-                && !filePathFieldOut.getText().isEmpty()) {
+        if (filePathFieldOut.getText() != null && filePathFieldIn.getText() != null && !filePathFieldIn.getText().isEmpty() && !filePathFieldOut.getText().isEmpty()) {
             return true;
         } else {
             return false;
@@ -419,14 +440,16 @@ public class GuiView implements View {
 
 
     public void setAllButtonHandler(Runnable handler) {
-        setButtonHandler(startButton,  handler);
-        setButtonHandler(changeChar,  handler);
+        setButtonHandler(startButton, handler);
+        setButtonHandler(changeChar, handler);
     }
 
-    private void setButtonHandler(Button button, Runnable handler  ){
+    private void setButtonHandler(Button button, Runnable handler) {
         button.setOnAction(e -> {
+            log(MSG_FOR_LOG_START_FUNCTION);
             lastClickedButtonId = button.getId();
             handler.run();
+            log(MSG_FOR_LOG_END_FUNCTION);
         });
     }
 
@@ -445,19 +468,20 @@ public class GuiView implements View {
 
     public void setSelectFileButtonOutHandler() {
         selectFileButtonOut.setOnAction(e -> {
-                System.out.println(START_OUT_FILE_CHOOSE);
-                FileChooser fileChooser = new FileChooser();
-                File file = fileChooser.showOpenDialog(new Stage());
-                setFilePathFieldOut(file.getAbsolutePath());
-                log(MSG_FOR_LOG_FILE_OUT_DETAIL + file);
-                System.out.println(END_OUT_FILE_CHOOSE);
-                if(isStartButtonAvailability()){
-                    setEnabledStartButton(true);
-                }else{
-                    setEnabledStartButton(false);
-                };
-                setTextFileOut(FileManager.readFile(getFilePathFieldOut()));
-                log(MSG_FOR_LOG_CHOOSE_OUT + file);
+            System.out.println(START_OUT_FILE_CHOOSE);
+            FileChooser fileChooser = new FileChooser();
+            File file = fileChooser.showOpenDialog(new Stage());
+            setFilePathFieldOut(file.getAbsolutePath());
+            log(MSG_FOR_LOG_FILE_OUT_DETAIL + file);
+            System.out.println(END_OUT_FILE_CHOOSE);
+            if (isStartButtonAvailability()) {
+                setEnabledStartButton(true);
+            } else {
+                setEnabledStartButton(false);
+            }
+            ;
+            setTextFileOut(FileManager.readFile(getFilePathFieldOut()));
+            log(MSG_FOR_LOG_CHOOSE_OUT + file);
         });
     }
 

@@ -1,5 +1,6 @@
 package com.javarush.cryptoanalyzer.ostapenko.service;
 
+import com.javarush.cryptoanalyzer.ostapenko.constans.GuiViewConstans;
 import com.javarush.cryptoanalyzer.ostapenko.entity.Result;
 import com.javarush.cryptoanalyzer.ostapenko.exception.ApplicationException;
 import com.javarush.cryptoanalyzer.ostapenko.utils.FileManager;
@@ -32,12 +33,12 @@ public class StaticAnalyze implements Function {
         String result = decodeText(finalMap,encodeText);
         FileManager.writeFile(result, parametrs[2]);
         //System.out.println(result);
+            return new Result(OK, new String[]{GuiViewConstans.UPDATE_AREA_FILE_OUT});
         } catch(Exception e){
             e.printStackTrace();
             return new Result(ERROR, new ApplicationException("ошибка при операции статистического анализа", e));
 
         }
-        return new Result(OK);
     }
 
     private HashMap<Character, Integer> calcCharStatistic(String text) {

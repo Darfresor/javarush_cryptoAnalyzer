@@ -37,4 +37,11 @@ public class GuiViewConstans {
     public static final String MSG_FOR_LOG_FILE_STATIC_DETAIL = "Выбран файл со статистическими данными: ";
     public static final String END_STATIC_FILE_CHOOSE = "Выбор файла статистических данных завершен";
     public static final String MSG_FOR_LOG_CHOOSE_STATIC = "Данные из статистического файла отображены в интерфейсе";
+    public static final String MSG_FOR_LOG_START_FUNCTION = "Обработка начата";
+    public static final String MSG_FOR_LOG_END_FUNCTION = "Обработка завершена";
+    public static final String NON_GUI_COMMAND = "NON_GUI_COMMAND";
+    public static final String NON_GUI_COMMAND_TEXT = "Нет команд для выполнения в GUI интерфейсе";
+    public static final String UPDATE_AREA_FILE_OUT = "UPDATE_AREA_FILE_OUT";
+    public static final String UNKNOWN_COMMAND_TEXT = "Подана неизвестная команда";
+
 }
