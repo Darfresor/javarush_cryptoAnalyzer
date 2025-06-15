@@ -1,5 +1,6 @@
 package com.javarush.cryptoanalyzer.ostapenko.controller;
 
+import com.javarush.cryptoanalyzer.ostapenko.exception.ViewTypeException;
 import com.javarush.cryptoanalyzer.ostapenko.utils.FileManager;
 import com.javarush.cryptoanalyzer.ostapenko.view.GuiView;
 import com.javarush.cryptoanalyzer.ostapenko.view.View;
@@ -11,6 +12,7 @@ import java.io.File;
 import static com.javarush.cryptoanalyzer.ostapenko.constans.GUIControllerConstans.*;
 
 public class GUIController extends Controller {
+    GuiView guiView;
 
     public GUIController(View view) {
         super(view);
@@ -18,20 +20,20 @@ public class GUIController extends Controller {
 
     @Override
     public void initialize() {
+        if(view instanceof GuiView){
+            this.guiView = (GuiView) view;
+        }else{
+            throw new ViewTypeException("В интерфейс View передан класс отличный от ожидаемого GuiView.");
+        };
         setupEventHandlers();
     }
 
     private void setupEventHandlers() {
-        //TODO instanceof?, view и все через абстрации?
-        if (view instanceof GuiView guiView) {
             guiView.setSelectFileButtonInHandler(() -> handlerSelectFileIn(guiView));
             guiView.setSelectFileButtonOutHandler(() -> handlerSelectFileOut(guiView));
             guiView.setSelectFileButtonSourceHandler(() -> handlerSelectFileSource(guiView));
             guiView.setStartButton(() -> handlerStartButton(guiView));
             guiView.setChangeChar(() -> handlerChangeChar(guiView));
-
-
-        }
     }
 
     private void handlerSelectFileIn(GuiView guiView) {
