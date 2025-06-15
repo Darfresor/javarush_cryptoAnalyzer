@@ -2,6 +2,7 @@ package com.javarush.cryptoanalyzer.ostapenko.view;
 
 import com.javarush.cryptoanalyzer.ostapenko.constans.RussianAlphabet;
 import com.javarush.cryptoanalyzer.ostapenko.entity.Result;
+import com.javarush.cryptoanalyzer.ostapenko.utils.FileManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -11,17 +12,16 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.File;
 
 import static com.javarush.cryptoanalyzer.ostapenko.constans.ApplicationComplitionConstans.*;
 import static com.javarush.cryptoanalyzer.ostapenko.constans.GuiViewConstans.*;
 
 
 public class GuiView implements View {
-    private Map<String, Runnable> handlers = new HashMap<>();
 
     private final Stage stage;
     private TextArea logArea;
@@ -94,6 +94,10 @@ public class GuiView implements View {
                 }
             }
         });
+        setSelectFileButtonInHandler();
+        setSelectFileButtonOutHandler();
+        setSelectFileButtonSourceHandler();
+
     }
 
 
@@ -347,9 +351,25 @@ public class GuiView implements View {
         }
     }
 
-    public void setSelectFileButtonInHandler(Runnable handler) {
-        selectFileButtonIn.setOnAction(e -> handler.run());
+
+    public void setSelectFileButtonInHandler() {
+        selectFileButtonIn.setOnAction(e -> {
+            System.out.println(START_IN_FILE_CHOOSE);
+            FileChooser fileChooser = new FileChooser();
+            File file = fileChooser.showOpenDialog(new Stage());
+            setFilePathFieldIn(file.getAbsolutePath());
+            log(MSG_FOR_LOG_FILE_IN_DETAIL + file);
+            System.out.println(END_IN_FILE_CHOOSE);
+            if(isStartButtonAvailability()){
+                setEnabledStartButton(true);
+            }else{
+                setEnabledStartButton(false);
+            }
+            setTextFileIn(FileManager.readFile(getFilePathFieldIn()));
+            log(MSG_FOR_LOG_CHOOSE_IN + file);
+        });
     }
+
 
     public void log(String message) {
         logArea.appendText(message + "\n");
@@ -367,9 +387,7 @@ public class GuiView implements View {
         infoAlert.showAndWait();
     }
 
-    public void setSelectFileButtonOutHandler(Runnable handler) {
-        selectFileButtonOut.setOnAction(e -> handler.run());
-    }
+
 
     public void setFilePathFieldIn(String text) {
         filePathFieldIn.setText(text);
@@ -459,9 +477,37 @@ public class GuiView implements View {
         this.textFileSource.setText(textSource);
     }
 
-    public void setSelectFileButtonSourceHandler(Runnable handler) {
-        selectFileButtonSource.setOnAction(e -> handler.run());
+    public void setSelectFileButtonOutHandler() {
+        selectFileButtonOut.setOnAction(e -> {
+                System.out.println(START_OUT_FILE_CHOOSE);
+                FileChooser fileChooser = new FileChooser();
+                File file = fileChooser.showOpenDialog(new Stage());
+                setFilePathFieldOut(file.getAbsolutePath());
+                log(MSG_FOR_LOG_FILE_OUT_DETAIL + file);
+                System.out.println(END_OUT_FILE_CHOOSE);
+                if(isStartButtonAvailability()){
+                    setEnabledStartButton(true);
+                }else{
+                    setEnabledStartButton(false);
+                };
+                setTextFileOut(FileManager.readFile(getFilePathFieldOut()));
+                log(MSG_FOR_LOG_CHOOSE_OUT + file);
+        });
     }
+
+    public void setSelectFileButtonSourceHandler() {
+        selectFileButtonSource.setOnAction(e -> {
+            System.out.println(START_STATIC_FILE_CHOOSE);
+            FileChooser fileChooser = new FileChooser();
+            File file = fileChooser.showOpenDialog(new Stage());
+            setFilePathFieldSource(file.getAbsolutePath());
+            log(MSG_FOR_LOG_FILE_STATIC_DETAIL + file);
+            System.out.println(END_STATIC_FILE_CHOOSE);
+            setTextFileSource(FileManager.readFile(getFilePathFieldSource()));
+            log(MSG_FOR_LOG_CHOOSE_STATIC + file);
+        });
+    }
+
 
     public void setComboBoxChangeChar() {
         ObservableList<String> items = FXCollections.observableArrayList();

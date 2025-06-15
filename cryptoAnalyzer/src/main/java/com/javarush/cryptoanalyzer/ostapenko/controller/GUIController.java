@@ -29,54 +29,10 @@ public class GUIController extends Controller {
     }
 
     private void setupEventHandlers() {
-            guiView.setSelectFileButtonInHandler(() -> handlerSelectFileIn(guiView));
-            guiView.setSelectFileButtonOutHandler(() -> handlerSelectFileOut(guiView));
-            guiView.setSelectFileButtonSourceHandler(() -> handlerSelectFileSource(guiView));
             guiView.setStartButton(() -> handlerStartButton(guiView));
             guiView.setChangeChar(() -> handlerChangeChar(guiView));
     }
 
-    private void handlerSelectFileIn(GuiView guiView) {
-        System.out.println(START_IN_FILE_CHOOSE);
-        FileChooser fileChooser = new FileChooser();
-        File file = fileChooser.showOpenDialog(new Stage());
-        guiView.setFilePathFieldIn(file.getAbsolutePath());
-        guiView.log(MSG_FOR_LOG_FILE_IN_DETAIL + file);
-        System.out.println(END_IN_FILE_CHOOSE);
-        if(guiView.isStartButtonAvailability()){
-            guiView.setEnabledStartButton(true);
-        }else{
-            guiView.setEnabledStartButton(false);
-        }
-        guiView.setTextFileIn(FileManager.readFile(guiView.getFilePathFieldIn()));
-        guiView.log(MSG_FOR_LOG_CHOOSE_IN + file);
-    }
-    private void handlerSelectFileOut(GuiView guiView) {
-        System.out.println(START_OUT_FILE_CHOOSE);
-        FileChooser fileChooser = new FileChooser();
-        File file = fileChooser.showOpenDialog(new Stage());
-        guiView.setFilePathFieldOut(file.getAbsolutePath());
-        guiView.log(MSG_FOR_LOG_FILE_OUT_DETAIL + file);
-        System.out.println(END_OUT_FILE_CHOOSE);
-        if(guiView.isStartButtonAvailability()){
-            guiView.setEnabledStartButton(true);
-        }else{
-            guiView.setEnabledStartButton(false);
-        };
-        guiView.setTextFileOut(FileManager.readFile(guiView.getFilePathFieldOut()));
-        guiView.log(MSG_FOR_LOG_CHOOSE_OUT + file);
-    }
-
-    private void handlerSelectFileSource(GuiView guiView) {
-        System.out.println(START_STATIC_FILE_CHOOSE);
-        FileChooser fileChooser = new FileChooser();
-        File file = fileChooser.showOpenDialog(new Stage());
-        guiView.setFilePathFieldSource(file.getAbsolutePath());
-        guiView.log(MSG_FOR_LOG_FILE_STATIC_DETAIL + file);
-        System.out.println(END_STATIC_FILE_CHOOSE);
-        guiView.setTextFileSource(FileManager.readFile(guiView.getFilePathFieldSource()));
-        guiView.log(MSG_FOR_LOG_CHOOSE_STATIC + file);
-    }
 
     private void handlerStartButton(GuiView guiView) {
         guiView.log(MSG_FOR_LOG_START_FUNCTION);
