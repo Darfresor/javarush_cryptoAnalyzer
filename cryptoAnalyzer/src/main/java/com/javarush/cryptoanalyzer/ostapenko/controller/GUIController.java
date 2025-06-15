@@ -16,11 +16,11 @@ public class GUIController extends Controller {
 
     @Override
     public void initialize() {
-        if(view instanceof GuiView){
-            this.guiView = (GuiView) view;
+        if(view instanceof GuiView transformView){
+            this.guiView = transformView;
         }else{
             throw new ViewTypeException("В интерфейс View передан класс отличный от ожидаемого GuiView.");
-        };
+        }
         setupEventHandlers();
     }
 
