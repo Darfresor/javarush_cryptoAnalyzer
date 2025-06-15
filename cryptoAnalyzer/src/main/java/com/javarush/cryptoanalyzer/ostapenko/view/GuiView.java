@@ -456,12 +456,8 @@ public class GuiView implements View {
     }
 
 
-
-
-    public void setStartButton(Runnable handler) {
+    public void setAllButtonHandler(Runnable handler) {
         startButton.setOnAction(e -> handler.run());
-    }
-    public void setChangeChar(Runnable handler) {
         changeChar.setOnAction(e -> handler.run());
     }
 

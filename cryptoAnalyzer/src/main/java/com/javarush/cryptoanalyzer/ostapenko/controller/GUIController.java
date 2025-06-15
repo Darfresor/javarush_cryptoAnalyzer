@@ -4,10 +4,6 @@ import com.javarush.cryptoanalyzer.ostapenko.exception.ViewTypeException;
 import com.javarush.cryptoanalyzer.ostapenko.utils.FileManager;
 import com.javarush.cryptoanalyzer.ostapenko.view.GuiView;
 import com.javarush.cryptoanalyzer.ostapenko.view.View;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-
-import java.io.File;
 
 import static com.javarush.cryptoanalyzer.ostapenko.constans.GUIControllerConstans.*;
 
@@ -29,24 +25,16 @@ public class GUIController extends Controller {
     }
 
     private void setupEventHandlers() {
-            guiView.setStartButton(() -> handlerStartButton(guiView));
-            guiView.setChangeChar(() -> handlerChangeChar(guiView));
+            guiView.setAllButtonHandler(() -> handlerAllButton(guiView));
     }
 
-
-    private void handlerStartButton(GuiView guiView) {
+    private void handlerAllButton(GuiView guiView) {
         guiView.log(MSG_FOR_LOG_START_FUNCTION);
         run();
         guiView.setTextFileOut(FileManager.readFile(guiView.getFilePathFieldOut()));
         guiView.log(MSG_FOR_LOG_END_FUNCTION);
     }
 
-    private void handlerChangeChar(GuiView guiView) {
-        guiView.log(MSG_FOR_LOG_START_FUNCTION);
-        run();
-        guiView.setTextFileOut(FileManager.readFile(guiView.getFilePathFieldOut()));
-        guiView.log(MSG_FOR_LOG_END_FUNCTION);
-    }
 
 
 
