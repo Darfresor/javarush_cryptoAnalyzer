@@ -53,7 +53,7 @@ public class CaesarEncode implements Function{
     public Result execute(String[] parametrs) {
         try {
             initAlphabet();
-            System.out.println(PATERN_PARAMETRS);
+            System.out.printf(PATERN_PARAMETRS,Arrays.toString(parametrs));
             int shift = Integer.parseInt(parametrs[3]);
             String text = FileManager.readFile(parametrs[1]);
             String result = encrypt(text, shift);
