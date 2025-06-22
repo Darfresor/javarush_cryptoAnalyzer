@@ -4,6 +4,8 @@ import com.javarush.cryptoanalyzer.ostapenko.exception.ViewTypeException;
 import com.javarush.cryptoanalyzer.ostapenko.view.GuiView;
 import com.javarush.cryptoanalyzer.ostapenko.view.View;
 
+import static com.javarush.cryptoanalyzer.ostapenko.constans.GUIControllerConstants.PATTERN_ERROR_VIEW_TYPE;
+
 
 public class GUIController extends Controller {
     GuiView guiView;
@@ -17,7 +19,7 @@ public class GUIController extends Controller {
         if(view instanceof GuiView transformView){
             this.guiView = transformView;
         }else{
-            throw new ViewTypeException("В интерфейс View передан класс отличный от ожидаемого GuiView.");
+            throw new ViewTypeException(PATTERN_ERROR_VIEW_TYPE);
         }
         setupEventHandlers();
     }

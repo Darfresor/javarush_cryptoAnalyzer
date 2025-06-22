@@ -7,6 +7,8 @@ import com.javarush.cryptoanalyzer.ostapenko.utils.FileManager;
 
 import java.util.Arrays;
 
+import static com.javarush.cryptoanalyzer.ostapenko.constans.ChangesCharConstants.PATERN_CHANGE_CHAR_RESULT_ERROR;
+import static com.javarush.cryptoanalyzer.ostapenko.constans.FunctionConstants.PATERN_PARAMETRS;
 import static com.javarush.cryptoanalyzer.ostapenko.repository.ResultCode.ERROR;
 import static com.javarush.cryptoanalyzer.ostapenko.repository.ResultCode.OK;
 
@@ -14,7 +16,7 @@ public class ChangesChar implements Function{
     @Override
     public Result execute(String[] parametrs) {
         try {
-            System.out.println("parametrs = " + Arrays.toString(parametrs));
+            System.out.printf(PATERN_PARAMETRS, Arrays.toString(parametrs));
             String decodeText = FileManager.readFile(parametrs[2]);
             String result = changeChar(decodeText,parametrs[5].toCharArray()[0], parametrs[6].toCharArray()[0]);
             FileManager.writeFile(result, parametrs[2]);
@@ -22,7 +24,7 @@ public class ChangesChar implements Function{
             return new Result(OK, new String[]{GuiViewConstans.UPDATE_AREA_FILE_OUT});
         } catch(Exception e){
             e.printStackTrace();
-            return new Result(ERROR, new ApplicationException("ошибка при операции замены символов в тексте", e));
+            return new Result(ERROR, new ApplicationException(PATERN_CHANGE_CHAR_RESULT_ERROR, e));
 
         }
     }

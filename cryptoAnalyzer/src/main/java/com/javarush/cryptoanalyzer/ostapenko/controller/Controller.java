@@ -7,6 +7,7 @@ import com.javarush.cryptoanalyzer.ostapenko.repository.ResultCode;
 import com.javarush.cryptoanalyzer.ostapenko.service.Function;
 import com.javarush.cryptoanalyzer.ostapenko.view.View;
 
+import static com.javarush.cryptoanalyzer.ostapenko.constans.ControllerConstants.PATTER_ERROR;
 import static com.javarush.cryptoanalyzer.ostapenko.constans.FunctionCodeConstans.*;
 
 public abstract class Controller {
@@ -34,7 +35,7 @@ public abstract class Controller {
             //TODO передача команд изменения интерфейса после работы функции?
         } catch (RuntimeException e) {
             view.printResult(new Result(ResultCode.ERROR,
-                    new ApplicationException("Ошибка в работе приложения", e)));
+                    new ApplicationException(PATTER_ERROR, e)));
             e.printStackTrace();
         }
     }
@@ -43,13 +44,13 @@ public abstract class Controller {
 
     private Function getFunction(String mode) {
         return switch (mode) {
-            case "ENCODE" -> FunctionCode.valueOf(ENCODE).getFunction();
-            case "DECODE" -> FunctionCode.valueOf(DECODE).getFunction();
-            case "BRUTEFORCE" -> FunctionCode.valueOf(BRUTEFORCE).getFunction();
-            case "STATIC_ANALYZE" -> FunctionCode.valueOf(STATIC_ANALYZE).getFunction();
-            case "CHANGES_CHAR" -> FunctionCode.valueOf(CHANGES_CHAR).getFunction();
-            case "VIGENER_ENCODE" -> FunctionCode.valueOf(VIGENER_ENCODE).getFunction();
-            case "VIGENER_DECODE" -> FunctionCode.valueOf(VIGENER_DECODE).getFunction();
+            case ENCODE -> FunctionCode.valueOf(ENCODE).getFunction();
+            case DECODE -> FunctionCode.valueOf(DECODE).getFunction();
+            case BRUTEFORCE -> FunctionCode.valueOf(BRUTEFORCE).getFunction();
+            case STATIC_ANALYZE -> FunctionCode.valueOf(STATIC_ANALYZE).getFunction();
+            case CHANGES_CHAR -> FunctionCode.valueOf(CHANGES_CHAR).getFunction();
+            case VIGENER_ENCODE -> FunctionCode.valueOf(VIGENER_ENCODE).getFunction();
+            case VIGENER_DECODE -> FunctionCode.valueOf(VIGENER_DECODE).getFunction();
             default -> FunctionCode.valueOf(UNSUPPORTED_FUNCTION).getFunction();
         };
     }

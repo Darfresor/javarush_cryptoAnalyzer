@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import static com.javarush.cryptoanalyzer.ostapenko.constans.CaesarDecodeConstants.PATERN_DECODE_RESULT_ERROR;
+import static com.javarush.cryptoanalyzer.ostapenko.constans.FunctionConstants.PATERN_PARAMETRS;
 import static com.javarush.cryptoanalyzer.ostapenko.repository.ResultCode.ERROR;
 import static com.javarush.cryptoanalyzer.ostapenko.repository.ResultCode.OK;
 
@@ -51,7 +53,7 @@ public class CaesarDecode implements Function{
     public Result execute(String[] parametrs) {
         try {
             initAlphabet();
-            System.out.println("parametrs = " + Arrays.toString(parametrs));
+            System.out.printf(PATERN_PARAMETRS,Arrays.toString(parametrs));
             int shift = Integer.parseInt(parametrs[3]);
             String text = FileManager.readFile(parametrs[1]);
             String result = decrypt(text, shift);
@@ -61,7 +63,7 @@ public class CaesarDecode implements Function{
             return new Result(OK, new String[]{GuiViewConstans.UPDATE_AREA_FILE_OUT});
         } catch(Exception e){
             e.printStackTrace();
-            return new Result(ERROR, new ApplicationException("ошибка при операции декодирования", e));
+            return new Result(ERROR, new ApplicationException(PATERN_DECODE_RESULT_ERROR, e));
 
         }
     }

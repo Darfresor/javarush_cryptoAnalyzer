@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import static com.javarush.cryptoanalyzer.ostapenko.constans.CaesarEncodeConstants.PATERN_ENCODE_RESULT_ERROR;
+import static com.javarush.cryptoanalyzer.ostapenko.constans.FunctionConstants.PATERN_PARAMETRS;
 import static com.javarush.cryptoanalyzer.ostapenko.repository.ResultCode.ERROR;
 import static com.javarush.cryptoanalyzer.ostapenko.repository.ResultCode.OK;
 
@@ -51,7 +53,7 @@ public class CaesarEncode implements Function{
     public Result execute(String[] parametrs) {
         try {
             initAlphabet();
-            System.out.println("parametrs = " + Arrays.toString(parametrs));
+            System.out.println(PATERN_PARAMETRS);
             int shift = Integer.parseInt(parametrs[3]);
             String text = FileManager.readFile(parametrs[1]);
             String result = encrypt(text, shift);
@@ -61,7 +63,7 @@ public class CaesarEncode implements Function{
             return new Result(OK, new String[]{GuiViewConstans.UPDATE_AREA_FILE_OUT});
         } catch(Exception e){
             e.printStackTrace();
-            return new Result(ERROR, new ApplicationException("ошибка при операции кодирования", e));
+            return new Result(ERROR, new ApplicationException(PATERN_ENCODE_RESULT_ERROR, e));
         }
 
     }

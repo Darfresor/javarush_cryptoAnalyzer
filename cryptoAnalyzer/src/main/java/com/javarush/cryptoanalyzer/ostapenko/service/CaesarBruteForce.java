@@ -11,10 +11,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import static com.javarush.cryptoanalyzer.ostapenko.constans.CaesarBruteForceConstants.*;
+import static com.javarush.cryptoanalyzer.ostapenko.constans.FunctionConstants.PATERN_PARAMETRS;
 import static com.javarush.cryptoanalyzer.ostapenko.repository.ResultCode.ERROR;
 import static com.javarush.cryptoanalyzer.ostapenko.repository.ResultCode.OK;
 
-public class CaesarBruteForce implements Function{
+public class CaesarBruteForce implements Function {
     private char[] alphabet;
     private HashSet<Character> alphabetSet;
     private HashMap<Character, Integer> alphabetMap;
@@ -24,6 +26,7 @@ public class CaesarBruteForce implements Function{
         alphabetSet = RussianAlphabet.getAlphabetSet();
         alphabetMap = RussianAlphabet.getAlphabetMap();
     }
+
     private String decrypt(String text, int shift) {
         char[] inputChars = text.toCharArray();
         char[] decryptedChars = new char[inputChars.length];
@@ -53,7 +56,7 @@ public class CaesarBruteForce implements Function{
         try {
             initAlphabet();
             HashSet<String> dictionary = BrutForceDictionary.getDictionary();
-            System.out.println("parametrs = " + Arrays.toString(parametrs));
+            System.out.printf(PATERN_PARAMETRS, Arrays.toString(parametrs));
             String text = FileManager.readFile(parametrs[1]);
             String result = "";
             String bestResult = "";
@@ -75,13 +78,11 @@ public class CaesarBruteForce implements Function{
                 }
             }
             FileManager.writeFile(bestResult, parametrs[2]);
-            System.out.println("Наибольшое кол-во сопавдений = " + bestNumberOfMatches);
-            System.out.println("При ключе  = " + finalkey);
-            // System.out.println(bestResult);
-            return new Result(OK, new String[]{GuiViewConstans.UPDATE_AREA_FILE_OUT}, "Наибольшее кол-во сопавдений найдено при ключе = "+ finalkey );
-        } catch(Exception e){
+            System.out.printf(PATERN_BRUTFORCE, bestNumberOfMatches, finalkey);
+            return new Result(OK, new String[]{GuiViewConstans.UPDATE_AREA_FILE_OUT}, String.format(PATERN_BRUTFORCE_RESULT_SUCCESS, finalkey));
+        } catch (Exception e) {
             e.printStackTrace();
-            return new Result(ERROR, new ApplicationException("ошибка при операции декодирования", e));
+            return new Result(ERROR, new ApplicationException(PATERN_BRUTFORCE_RESULT_ERROR, e));
         }
     }
 }

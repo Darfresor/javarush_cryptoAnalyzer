@@ -7,6 +7,8 @@ import com.javarush.cryptoanalyzer.ostapenko.utils.FileManager;
 
 import java.util.*;
 
+import static com.javarush.cryptoanalyzer.ostapenko.constans.FunctionConstants.PATERN_PARAMETRS;
+import static com.javarush.cryptoanalyzer.ostapenko.constans.StaticAnalyzeConstants.PATTERN_ERROR;
 import static com.javarush.cryptoanalyzer.ostapenko.repository.ResultCode.ERROR;
 import static com.javarush.cryptoanalyzer.ostapenko.repository.ResultCode.OK;
 
@@ -15,7 +17,7 @@ public class StaticAnalyze implements Function {
     @Override
     public Result execute(String[] parametrs) {
         try {
-        System.out.println("parametrs = " + Arrays.toString(parametrs));
+        System.out.printf(PATERN_PARAMETRS,Arrays.toString(parametrs));
         String encodeText = FileManager.readFile(parametrs[1]);
         String representativeText = FileManager.readFile(parametrs[4]);
         HashMap<Character, Integer> countCharInSourceText = new HashMap<>();
@@ -36,7 +38,7 @@ public class StaticAnalyze implements Function {
             return new Result(OK, new String[]{GuiViewConstans.UPDATE_AREA_FILE_OUT});
         } catch(Exception e){
             e.printStackTrace();
-            return new Result(ERROR, new ApplicationException("ошибка при операции статистического анализа", e));
+            return new Result(ERROR, new ApplicationException(PATTERN_ERROR, e));
 
         }
     }
