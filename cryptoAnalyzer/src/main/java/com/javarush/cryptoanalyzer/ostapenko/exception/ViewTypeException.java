@@ -1,6 +1,6 @@
 package com.javarush.cryptoanalyzer.ostapenko.exception;
 
-public class ViewTypeException extends RuntimeException {
+public class ViewTypeException extends ApplicationException {
     public ViewTypeException(String message) {
         super(message);
     }

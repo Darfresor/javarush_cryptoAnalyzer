@@ -169,13 +169,13 @@ public class GuiView implements View {
         staticAnalyzeCheckBox.setId(STATIC_ANALYZE);
         staticAnalyzeCheckBox.setSelected(false);
         staticAnalyzeChangeChar = new RadioButton(CHANGE_CHAR);
-        staticAnalyzeChangeChar.setId(FunctionCodeConstans.CHANGES_CHAR);
+        staticAnalyzeChangeChar.setId(CHANGES_CHAR);
         staticAnalyzeChangeChar.setSelected(false);
         vigenereEncryptCheckBox = new RadioButton(VIGENERE_ENCODE);
-        vigenereEncryptCheckBox.setId(FunctionCodeConstans.VIGENER_ENCODE);
+        vigenereEncryptCheckBox.setId(VIGENER_ENCODE);
         vigenereEncryptCheckBox.setSelected(false);
         vigenereDecryptCheckBox = new RadioButton(VIGENERE_DECODE);
-        vigenereDecryptCheckBox.setId(FunctionCodeConstans.VIGENER_DECODE);
+        vigenereDecryptCheckBox.setId(VIGENER_DECODE);
         vigenereDecryptCheckBox.setSelected(false);
 
 
@@ -327,34 +327,35 @@ public class GuiView implements View {
                     log(result.getMessage());
                     showInfoMessage(result.getMessage());
                 }
-               runGUICommand(result);
+                runGUICommand(result);
 
 
             }
             case ERROR -> {
                 System.out.println(EXCEPTION + result.getApplicationException().getMessage());
-                showAlertMessage(result.getApplicationException().getMessage());
                 for (StackTraceElement element : result.getApplicationException().getStackTrace()) {
                     log(String.valueOf(element));
                 }
+                showAlertMessage(result.getApplicationException().getMessage(),
+                        result.getApplicationException().getCause().getMessage());
 
             }
         }
     }
 
 
-    private void runGUICommand(Result result){
+    private void runGUICommand(Result result) {
         String command;
         if (result.getCommands() != null && !result.getCommands()[0].isEmpty()) {
             command = result.getCommands()[0];
-        }else{
+        } else {
             command = NON_GUI_COMMAND;
         }
-        switch(command){
-            case UPDATE_AREA_FILE_OUT->{
+        switch (command) {
+            case UPDATE_AREA_FILE_OUT -> {
                 setTextFileOut(FileManager.readFile(getFilePathFieldOut()));
             }
-            case NON_GUI_COMMAND->{
+            case NON_GUI_COMMAND -> {
                 System.out.println(NON_GUI_COMMAND_TEXT);
             }
             default -> {
@@ -394,10 +395,10 @@ public class GuiView implements View {
         infoAlert.showAndWait();
     }
 
-    private void showAlertMessage(String message) {
+    private void showAlertMessage(String message_title, String message_detail) {
         Alert infoAlert = new Alert(Alert.AlertType.ERROR);
-        infoAlert.setTitle(TITLE_ERROR);
-        infoAlert.setContentText(message);
+        infoAlert.setTitle(message_title);
+        infoAlert.setContentText(message_detail);
         infoAlert.showAndWait();
     }
 

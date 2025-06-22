@@ -1,5 +1,8 @@
 package com.javarush.cryptoanalyzer.ostapenko.utils;
 
+import com.javarush.cryptoanalyzer.ostapenko.exception.NonReadingFileException;
+import com.javarush.cryptoanalyzer.ostapenko.exception.NonWritingException;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -21,7 +24,7 @@ public final class FileManager {
             byte[] bytes = Files.readAllBytes(path);
             return new String(bytes, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            throw new RuntimeException(String.format(ERROR_READ,filePath), e);
+            throw new NonReadingFileException(String.format(ERROR_READ,filePath), e);
         }
     }
 
@@ -36,7 +39,7 @@ public final class FileManager {
         byte[] bytes = content.getBytes(StandardCharsets.UTF_8);
         Files.write(path, bytes);
         } catch (IOException e) {
-            throw new RuntimeException(String.format(ERROR_WRITE,filePath), e);
+            throw new NonWritingException(String.format(ERROR_WRITE,filePath), e);
         }
     }
 
